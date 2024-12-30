@@ -1,0 +1,25 @@
+.upload-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+}
+
+.upload-card {
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    border: none;
+    border-radius: 15px;
+}
+
+.upload-zone {
+    border: 2px dashed #dee2e6;
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
+
+.upload-zone:hover {
+    border-color: #0d6efd;
+}
