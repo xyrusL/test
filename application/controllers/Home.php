@@ -2,7 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Home extends CI_Controller {
-    const ITEMS_PER_LOAD = 6;
 
 	public function index()
 	{
@@ -32,24 +31,35 @@ class Home extends CI_Controller {
         echo json_encode($data);
     }
 
+    public function getMovieAnime()
+    {
+        $this->load->model('fetchAnimeModel');
+        $data = $this->fetchAnimeModel->getMovieAnime();
+        echo json_encode($data);
+    }
+
     public function loadMore()
     {
-        $offset = $this->input->post('offset');
-        $type = $this->input->post('type');
+        $offSet = $this->input->post('offSet');
+        $type = $this->input->post('currentType'); 
+        $itemsPerLoad = 6;
         
         $this->load->model('fetchAnimeModel');
         
         switch($type) {
             case 'dub':
-                $data = $this->fetchAnimeModel->getDubAnime($offset);
+                $result = $this->fetchAnimeModel->getDubAnime($offSet, $itemsPerLoad);
                 break;
             case 'sub':
-                $data = $this->fetchAnimeModel->getSubAnime($offset);
+                $result = $this->fetchAnimeModel->getSubAnime($offSet, $itemsPerLoad);
+                break;
+            case 'movie':
+                $result = $this->fetchAnimeModel->getMovieAnime($offSet, $itemsPerLoad);
                 break;
             default:
-                $data = $this->fetchAnimeModel->getAllAnime($offset);
+                $result = $this->fetchAnimeModel->getAllAnime($offSet, $itemsPerLoad);
         }
         
-        echo json_encode(array_slice($data, 0, self::ITEMS_PER_LOAD));
+        echo json_encode($result);
     }
 }
