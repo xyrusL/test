@@ -106,4 +106,14 @@ class fetchAnimeModel extends CI_Model {
         $query = $this->db->get('animeseries');
         return $query->result();
     }
+
+    public function getRandomAnime() {
+        $this->db->select('*')
+                 ->from('animeseries')
+                 ->order_by('RAND()')
+                 ->limit(1);
+        
+        $query = $this->db->get();
+        return $query->row();
+    }
 }

@@ -1,4 +1,6 @@
 <head>
+    <title><?php echo $title; ?></title>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/css/style.css">
@@ -8,7 +10,7 @@
     <script>
         let baseUrl = '<?php echo base_url(); ?>';
     </script>
-    <script defer src="<?php echo base_url('assets/js/player.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/js/player.js'); ?>" defer></script>
 </head>
 
 <body>

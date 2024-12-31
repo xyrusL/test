@@ -132,9 +132,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (searchInput) {
         searchInput.addEventListener('input', function() {
-            console.log("Search input detected");
-            $('.quicksearchcontainer').show();
             const searchQuery = this.value.trim();
+            
+            if (searchQuery.length === 0) {
+                $('.quicksearchcontainer').hide();
+                $('.quickresult').empty();
+                return;
+            }
+
+            $('.quicksearchcontainer').show();
             
             if (searchQuery.length >= 2) {
                 $.ajax({
@@ -184,10 +190,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-});
 
-$(document).on('click', '#loadmorelist', loadPagination);
-$('#showDub').click(() => fetchingAnimeData('getDubAnime'));
-$('#showAll').click(() => fetchingAnimeData('getAllAnime'));
-$('#showMovie').click(() => fetchingAnimeData('getMovieAnime'));
-$('#showFollowed').click(showFollowed);
+    $(document).on('click', '#loadmorelist', loadPagination);
+    $('#showDub').click(() => fetchingAnimeData('getDubAnime'));
+    $('#showAll').click(() => fetchingAnimeData('getAllAnime'));
+    $('#showMovie').click(() => fetchingAnimeData('getMovieAnime'));
+    $('#showFollowed').click(showFollowed);
+});
