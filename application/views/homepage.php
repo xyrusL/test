@@ -134,7 +134,7 @@
 							<li>
 								<?php 
 								// Remove emoticons and special characters
-								$clean_title = preg_replace('/[♥♡☆→]/u', '', $anime->title);
+								$clean_title = preg_replace('/[♥♡☆→()]/u', '', $anime->title);
 								
 								// Convert special characters and spaces
 								$url_title = strtolower($clean_title);

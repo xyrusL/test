@@ -49,7 +49,7 @@ class fetchAnimeModel extends CI_Model {
         $all_anime = $query->result();
         
         foreach($all_anime as $anime) {
-            $clean_title = preg_replace('/[♥♡☆→]/u', '', $anime->title);
+            $clean_title = preg_replace('/[♥♡☆→()]/u', '', $anime->title);
             $db_url_title = strtolower($clean_title);
             $db_url_title = str_replace([':', '+', '!', '?', '.', ' '], '-', $db_url_title);
             $db_url_title = preg_replace('/-+/', '-', $db_url_title);
