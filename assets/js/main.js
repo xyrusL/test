@@ -1,4 +1,3 @@
-// Constants
 const ANIME_TYPES = {
     ALL: 'all',
     DUB: 'dub',
@@ -112,7 +111,6 @@ function loadPagination() {
     });
 }
 
-// Event Handlers
 $(document).on('click', '#loadmorelist', loadPagination);
 $('#showDub').click(() => fetchingAnimeData('getDubAnime'));
 $('#showAll').click(() => fetchingAnimeData('getAllAnime'));
