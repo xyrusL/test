@@ -40,4 +40,34 @@ class fetchAnimeModel extends CI_Model {
         $query = $this->db->get('animeseries');
         return $query->result();
     }
+
+    public function getAnimeByTitle($url_title) {
+        $this->db->select('*');
+        $this->db->from('animeseries');
+        
+        // Get all anime and filter in PHP since MySQL REGEXP is causing issues
+        $query = $this->db->get();
+        $all_anime = $query->result();
+        
+        foreach($all_anime as $anime) {
+            // Clean the title same way as in homepage
+            $clean_title = preg_replace('/[♥♡☆→]/u', '', $anime->title);
+            $db_url_title = strtolower($clean_title);
+            $db_url_title = str_replace([':', '+', '!', '?', '.', ' '], '-', $db_url_title);
+            $db_url_title = preg_replace('/-+/', '-', $db_url_title);
+            $db_url_title = trim($db_url_title, '-');
+            
+            if($db_url_title === $url_title) {
+                return $anime;
+            }
+        }
+        
+        return null;
+    }
+
+    public function getAnimeById($id) {
+        $this->db->where('id', $id);
+        $query = $this->db->get('animeseries');
+        return $query->row();
+    }
 }

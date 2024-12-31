@@ -69,13 +69,34 @@ class Home extends CI_Controller {
             redirect('/');
         }
 
-        // Get anime details from your model based on the title
-        // $data['anime'] = $this->anime_model->getAnimeByTitle($title);
+        $this->load->model('fetchAnimeModel');
         
-        // For now, just pass the title
-        $data['title'] = $title;
+        // Get anime by title
+        $data['anime'] = $this->fetchAnimeModel->getAnimeByTitle($title);
         
-        // Load your anime series view
+        if (!$data['anime']) {
+            redirect('/');
+        }
+        
+        $data['title'] = $data['anime']->title;
+   
+        if (isset($data['anime']->genres)) {
+            $genres = json_decode($data['anime']->genres);
+            $data['genres'] = implode(', ', $genres);
+        } else {
+            $data['genres'] = '';
+        }
+        
+        $data['status'] = isset($data['anime']->status) ? $data['anime']->status : 'Unknown';
+        $data['total_episodes'] = isset($data['anime']->total_episodes) ? $data['anime']->total_episodes : 1;
+
+        if (isset($data['anime']->urls)) {
+            $urls = json_decode($data['anime']->urls);
+            $data['episode_count'] = count($urls);
+        } else {
+            $data['episode_count'] = 1;
+        }
+        
         $this->load->view('animeseries', $data);
     }
 }

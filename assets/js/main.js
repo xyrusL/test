@@ -58,6 +58,7 @@ function fetchingAnimeData(type) {
             try {
                 const data = JSON.parse(response);
                 if (data?.length) { 
+                    console.log(data);
                     $('#loadingtext').hide();
                     data.forEach(appendLayout);
                     $('#bottommsg').append(`

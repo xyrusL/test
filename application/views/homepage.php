@@ -132,7 +132,17 @@
 					<ul class="searchresult">
 						<?php foreach (array_slice($animeSeries, 0, 24) as $anime): ?>
 							<li>
-								<a href="" title="<?= $anime->title ?>">
+								<?php 
+								// Remove emoticons and special characters
+								$clean_title = preg_replace('/[♥♡☆→]/u', '', $anime->title);
+								
+								// Convert special characters and spaces
+								$url_title = strtolower($clean_title);
+								$url_title = str_replace([':', '+', '!', '?', '.', ' '], '-', $url_title);
+								$url_title = preg_replace('/-+/', '-', $url_title);
+								$url_title = trim($url_title, '-');
+								?>
+								<a href="<?= base_url('watch/' . $url_title) ?>" data-id="<?= $anime->id ?>" class="anime-link" title="<?= $anime->title ?>">
 									<div class="searchimg">
 										<img 
 											alt="<?= $anime->title ?> - Free Online" 
