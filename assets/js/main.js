@@ -120,6 +120,7 @@ function loadPagination() {
     });
 }
 
+
 $(document).on('click', '#loadmorelist', loadPagination);
 $('#showDub').click(() => fetchingAnimeData('getDubAnime'));
 $('#showAll').click(() => fetchingAnimeData('getAllAnime'));
