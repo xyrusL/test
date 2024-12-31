@@ -1,51 +1,84 @@
-let itemsPerLoad = 6;
-let offSet = 24;
-let currentType = 'all';
+// Constants
+const ANIME_TYPES = {
+    ALL: 'all',
+    DUB: 'dub',
+    SUB: 'sub',
+    MOVIE: 'movie'
+};
+
+const CONFIG = {
+    itemsPerLoad: 6,
+    initialOffset: 24
+};
+
+let offSet = CONFIG.initialOffset;
+let currentType = ANIME_TYPES.ALL;
 
 function appendLayout(anime) {
-    $('.searchresult').append(`
+    const template = `
         <li>
-        <a href="/anime/${anime.id}" title="${anime.title}">
-            <div class="searchimg">
-                <img 
-                    alt="${anime.title} - Free Online" 
-                    class="resultimg" 
-                    src="${anime.poster}" 
-                />
-                <div class="timetext">${anime.date}</div>
-                <div class="rating"><i class="glyphicon glyphicon-star"></i> ${anime.mal_score}</div>
-            </div>
-            <div class="details">
-                <p class="name">${anime.title}</p>
-                <p class="infotext">EP ${anime.total_episodes}${anime.status === 'Finished Airing' ? '' : '/?'}</p>
-            </div>
-        </a>
-    </li>
-`);  
+            <a href="/anime/${anime.id}" title="${anime.title}">
+                <div class="searchimg">
+                    <img 
+                        alt="${anime.title} - Free Online" 
+                        class="resultimg" 
+                        src="${anime.poster}" 
+                        loading="lazy"
+                    />
+                    <div class="timetext">${anime.date}</div>
+                    <div class="rating"><i class="glyphicon glyphicon-star"></i> ${anime.mal_score}</div>
+                </div>
+                <div class="details">
+                    <p class="name">${anime.title}</p>
+                    <p class="infotext">EP ${anime.total_episodes}${anime.status === 'Finished Airing' ? '' : '/?'}</p>
+                </div>
+            </a>
+        </li>
+    `;
+    $('.searchresult').append(template);
 }
 
 function showFollowed() {
-    $('.searchresult').empty();
+    $('.searchresult, #bottommsg').empty();
+    $('#bottommsg').append("You have no followed animes");
 }
 
 function fetchingAnimeData(type) {
-    currentType = type === 'getAllAnime' ? 'all' : (type === 'getDubAnime' ? 'dub' : (type === 'getSubAnime' ? 'sub' : 'movie'));
-    
+    currentType = type === 'getAllAnime' ? ANIME_TYPES.ALL : 
+                 type === 'getDubAnime' ? ANIME_TYPES.DUB : 
+                 type === 'getSubAnime' ? ANIME_TYPES.SUB : ANIME_TYPES.MOVIE;
+                 
+    $('.searchresult, #bottommsg').empty();
+    $('#loadingtext').show();
+
     $.ajax({
         url: `${baseUrl}/Home/${type}`,
         type: 'POST',
         success: function(response) {
-            let data = JSON.parse(response);
-            if (data) {
-                $('.searchresult').empty(); 
-                data.forEach(anime => appendLayout(anime));
+            try {
+                const data = JSON.parse(response);
+                if (data?.length) { 
+                    $('#loadingtext').hide();
+                    data.forEach(appendLayout);
+                    $('#bottommsg').append(`
+                        <div id="loadmorelist"><i class="glyphicon glyphicon-menu-down"></i> Load more</div>
+                    `);
+                }
+            } catch (error) {
+                console.error('Error parsing response:', error);
+                $('#loadingtext').hide();
+                $('#bottommsg').append('<div class="error-message">Error loading data</div>');
             }
+        },
+        error: function(xhr, status, error) {
+            console.error('Ajax error:', error);
+            $('#loadingtext').hide();
+            $('#bottommsg').append('<div class="error-message">Error loading data</div>');
         }
     });
 }
 
 function loadPagination() {
-    console.log("working");
     const $loadMoreBtn = $('#loadmorelist');
     const originalText = $loadMoreBtn.html();
     $loadMoreBtn.html('<i class="glyphicon glyphicon-refresh glyphicon-spin"></i> Load More...');
@@ -54,31 +87,34 @@ function loadPagination() {
         url: `${baseUrl}/Home/loadMore`,
         type: 'POST',
         data: { 
-            offSet: offSet, 
-            currentType: currentType
+            offSet, 
+            currentType
         },
         success: function(response) {
-            let data = JSON.parse(response);
-
-            console.log(data);
-            
-            if (data && data.length > 0) {
-                data.forEach(anime => appendLayout(anime));
-                offSet += itemsPerLoad; 
-                $loadMoreBtn.html(originalText);
-            } else {
-                $loadMoreBtn.html('No More Posts');
+            try {
+                const data = JSON.parse(response);
+                if (data?.length) {
+                    data.forEach(appendLayout);
+                    offSet += CONFIG.itemsPerLoad; 
+                    $loadMoreBtn.html(originalText);
+                } else {
+                    $loadMoreBtn.html('No More Posts');
+                }
+            } catch (error) {
+                console.error('Error parsing response:', error);
+                $loadMoreBtn.html('Error loading more posts');
             }
         },
-        error: function(error) {
-            console.log("Error: ", error);
+        error: function(xhr, status, error) {
+            console.error('Ajax error:', error);
             $loadMoreBtn.html(originalText);
         }
     });
 }
 
+// Event Handlers
+$(document).on('click', '#loadmorelist', loadPagination);
 $('#showDub').click(() => fetchingAnimeData('getDubAnime'));
 $('#showAll').click(() => fetchingAnimeData('getAllAnime'));
 $('#showMovie').click(() => fetchingAnimeData('getMovieAnime'));
-// $('#showFollowed').click(showFollowed);
-$('#loadmorelist').click(loadPagination);
+$('#showFollowed').click(showFollowed);
