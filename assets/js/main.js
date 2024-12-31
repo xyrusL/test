@@ -14,10 +14,17 @@ let offSet = CONFIG.initialOffset;
 let currentType = ANIME_TYPES.ALL;
 
 function appendLayout(anime) {
-    const formattedTitle = anime.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    // Clean title for URL - match PHP version
+    const cleanTitle = anime.title.replace(/[♥♡☆→()]/g, '');
+    const formattedTitle = cleanTitle.toLowerCase()
+        .replace(/[:+!?. ]/g, '-')
+        .replace(/-+/g, '-')
+        .trim()
+        .replace(/^-+|-+$/g, '');
+
     const template = `
         <li>
-            <a href="${baseUrl}watch/${formattedTitle}" title="${anime.title}">
+            <a href="${baseUrl}watch/${formattedTitle}" data-id="${anime.id}" title="${anime.title}">
                 <div class="searchimg">
                     <img 
                         alt="${anime.title} - Free Online" 
