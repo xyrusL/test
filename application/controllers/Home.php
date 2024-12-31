@@ -62,4 +62,20 @@ class Home extends CI_Controller {
         
         echo json_encode($result);
     }
+
+    public function watch($title = '')
+    {
+        if (empty($title)) {
+            redirect('/');
+        }
+
+        // Get anime details from your model based on the title
+        // $data['anime'] = $this->anime_model->getAnimeByTitle($title);
+        
+        // For now, just pass the title
+        $data['title'] = $title;
+        
+        // Load your anime series view
+        $this->load->view('animeseries', $data);
+    }
 }
