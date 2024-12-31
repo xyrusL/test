@@ -14,7 +14,6 @@ let offSet = CONFIG.initialOffset;
 let currentType = ANIME_TYPES.ALL;
 
 function appendLayout(anime) {
-    // Clean title for URL - match PHP version
     const cleanTitle = anime.title.replace(/[♥♡☆→()]/g, '');
     const formattedTitle = cleanTitle.toLowerCase()
         .replace(/[:+!?. ]/g, '-')
@@ -120,6 +119,72 @@ function loadPagination() {
     });
 }
 
+function cleanTitle(title) {
+    return title
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s-]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('q');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            console.log("Search input detected");
+            $('.quicksearchcontainer').show();
+            const searchQuery = this.value.trim();
+            
+            if (searchQuery.length >= 2) {
+                $.ajax({
+                    url: `${baseUrl}Home/searchAnime`,
+                    type: 'POST',
+                    data: { query: searchQuery },
+                    success: function(response) {
+                        $('.quickresult').empty();
+                        try {
+                            const data = JSON.parse(response);
+                            if (data?.length) {
+                                data.forEach(anime => {
+                                    $('.quickresult').append(`
+                                        <a href="${baseUrl}watch/${cleanTitle(anime.title)}" title="${anime.title}">
+                                            <li>
+                                                <div class="searchimg">
+                                                    <img class="resultimg2" src="${anime.poster}">
+                                                </div>
+                                                <div class="details">
+                                                    <p class="name">${anime.title}</p>
+                                                    <p class="infotext">${anime.title}<br>${anime.category}</p>
+                                                </div>
+                                            </li>
+                                        </a>
+                                    `);
+                                });
+                            } else {
+                                $('.quickresult').append('<li>No results found</li>');
+                            }
+                        } catch (error) {
+                            console.error('Error parsing search results:', error);
+                            $('.quickresult').append('<li>Error loading results</li>');
+                        }
+                    },
+                    error: function() {
+                        $('.quickresult').empty().append('<li>Error loading results</li>');
+                    }
+                });
+            } else {
+                $('.quickresult').empty();
+            }
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.quicksearchcontainer') && !e.target.closest('#searchbox')) {
+                $('.quicksearchcontainer').hide();
+            }
+        });
+    }
+});
 
 $(document).on('click', '#loadmorelist', loadPagination);
 $('#showDub').click(() => fetchingAnimeData('getDubAnime'));

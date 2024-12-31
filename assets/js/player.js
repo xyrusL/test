@@ -22,8 +22,7 @@ $('.playbutton').on('click', function() {
     saveLastWatched(episodeIndex, animeId);
 });
 
-function appendPlayer() {
-
+function initializeFirstLoad() {
     const episodeIndex = lastTime[animeId] || 0;
     getEpisodes(episodeIndex, animeId);
 }
@@ -37,18 +36,34 @@ function getEpisodes(episodeIndex, animeId) {
         success: function(response) {
             const data = JSON.parse(response);
             if (data.url) {
-                $('#iframeplayer').attr('src', data.url);
+                checkPlayer(data.url);
                 saveLastWatched(episodeIndex, animeId);
             } else {
                 console.error('Episode URL not found');
             }
 
-            $('#loadcontainer2').hide();
+            setTimeout(() => $('#loadcontainer2').hide(), 1000);
         },
         error: function(xhr, status, error) {
             console.error('Error fetching episode:', error);
         }
     });
+}
+
+function checkPlayer(url) {
+    const container = $('#iframecontainer');
+    
+    if (url.includes('archive.org')) {
+        container.empty();
+
+        const video = $('<video>', { controls: true, playsinline: true })
+            .append($('<source>', { src: url, type: 'video/mp4' }));
+        container.append($('<div>', { id: 'iframeplayer' }).append(video));
+        new Plyr(video[0]);
+    } else {
+        $('#iframeplayer').attr('src', url);
+    }
+
 }
 
 function saveLastWatched(index, id) {
@@ -67,4 +82,34 @@ function handleBackNavigation() {
 
 handleBackNavigation();
 previousButton = initializePreviousButton(animeId, lastTime);
-appendPlayer();
+initializeFirstLoad();
+
+$('#widescreenbtn').click(function() {
+    const iframe = $('#iframeplayer');
+    const btn = $(this);
+    const isFixed = iframe.css('position') === 'fixed';
+
+    iframe.css({
+        'position': isFixed ? '' : 'fixed',
+        'top': isFixed ? '' : '0px',
+        'left': isFixed ? '' : '0px',
+        'height': isFixed ? '' : '100%',
+        'width': isFixed ? '' : '100%',
+        'z-index': isFixed ? '' : '999',
+        'text-align': isFixed ? '' : 'center',
+        'background-color': isFixed ? '' : 'rgb(23, 23, 23)'
+    });
+
+    btn.css({
+        'position': isFixed ? '' : 'fixed',
+        'bottom': isFixed ? '' : '0px',
+        'right': isFixed ? '' : '-10px',
+        'z-index': isFixed ? '' : '1000',
+        'display': isFixed ? '' : 'block',
+        'padding': isFixed ? '' : '6px 10px',
+        'background-color': isFixed ? '' : 'rgb(34, 34, 34)',
+        'color': isFixed ? '' : 'rgb(255, 110, 110)'
+    });
+
+    btn.children('i').attr('class', isFixed ? 'glyphicon glyphicon-fullscreen' : 'glyphicon glyphicon-remove');
+});

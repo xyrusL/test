@@ -7,7 +7,7 @@ class Home extends CI_Controller {
 	{
 		$this->load->model('fetchAnimeModel');
 		$data['animeSeries'] = $this->fetchAnimeModel->getAllAnime();
-		$this->load->view('homepage', $data);
+		$this->load->view('/home/homepage', $data);
 	}
 
 	public function getAllAnime()
@@ -63,6 +63,30 @@ class Home extends CI_Controller {
         echo json_encode($result);
     }
 
+    public function getEpisodeUrl()
+    {
+        $animeId = $this->input->post('anime_id');
+        $episodeIndex = $this->input->post('episode_index');
+        
+        $this->load->model('fetchAnimeModel');
+        $urls = $this->fetchAnimeModel->getAnimeUrls($animeId);
+        
+        $response = ['url' => null];
+        if ($urls && isset($urls[$episodeIndex])) {
+            $response['url'] = $urls[$episodeIndex];
+        }
+        
+        echo json_encode($response);
+    }
+
+    public function searchAnime()
+    {
+        $query = $this->input->post('query');
+        $this->load->model('fetchAnimeModel');
+        $result = $this->fetchAnimeModel->searchAnime($query);
+        echo json_encode($result);
+    }
+
     public function watch($title = '')
     {
         if (empty($title)) {
@@ -96,22 +120,7 @@ class Home extends CI_Controller {
             $data['episode_count'] = 1;
         }
         
-        $this->load->view('animeseries', $data);
+        $this->load->view('home/animeseries', $data);
     }
 
-    public function getEpisodeUrl()
-    {
-        $animeId = $this->input->post('anime_id');
-        $episodeIndex = $this->input->post('episode_index');
-        
-        $this->load->model('fetchAnimeModel');
-        $urls = $this->fetchAnimeModel->getAnimeUrls($animeId);
-        
-        $response = ['url' => null];
-        if ($urls && isset($urls[$episodeIndex])) {
-            $response['url'] = $urls[$episodeIndex];
-        }
-        
-        echo json_encode($response);
-    }
 }

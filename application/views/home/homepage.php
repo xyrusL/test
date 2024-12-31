@@ -15,7 +15,7 @@
     <script>
         let baseUrl = '<?php echo base_url(); ?>';
     </script>
-	<script defer src="<?php echo base_url('assets/js/main.js'); ?>"></script>
+	<script src="<?php echo base_url('assets/js/main.js'); ?>"></script>
 
 	<!--CSS-->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -49,7 +49,7 @@
 	<div class="quicksearchcontainer">
 		<div class="resultcontainer">
 			<div id="fullresultbtn">
-				<a>GOGO</a>
+				<a>RioSearch</a>
 			</div>
 			<ul class="quickresult"></ul>
 		</div>
@@ -133,10 +133,7 @@
 						<?php foreach (array_slice($animeSeries, 0, 24) as $anime): ?>
 							<li>
 								<?php 
-								// Remove emoticons and special characters
-								$clean_title = preg_replace('/[♥♡☆→()]/u', '', $anime->title);
-								
-								// Convert special characters and spaces
+								$clean_title = preg_replace('/[♥♡☆→()]/u', '', $anime->title);						
 								$url_title = strtolower($clean_title);
 								$url_title = str_replace([':', '+', '!', '?', '.', ' '], '-', $url_title);
 								$url_title = preg_replace('/-+/', '-', $url_title);
@@ -287,4 +284,8 @@
 		</a>
 	</div>
 </body>
+<script>
+
+
+</script>
 </html>

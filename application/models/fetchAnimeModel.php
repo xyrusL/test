@@ -41,6 +41,14 @@ class fetchAnimeModel extends CI_Model {
         return $query->result();
     }
 
+    private function cleanTitle($title) {
+        $title = preg_replace('/[^\p{L}\p{N}\s\-]/u', '', $title);
+        $title = strtolower($title);
+        $title = preg_replace('/[\s-]+/', '-', $title);
+        $title = trim($title, '-');
+        return $title;
+    }
+
     public function getAnimeByTitle($url_title) {
         $this->db->select('*');
         $this->db->from('animeseries');
@@ -49,13 +57,7 @@ class fetchAnimeModel extends CI_Model {
         $all_anime = $query->result();
         
         foreach($all_anime as $anime) {
-            $clean_title = preg_replace('/[♥♡☆→()]/u', '', $anime->title);
-            $db_url_title = strtolower($clean_title);
-            $db_url_title = str_replace([':', '+', '!', '?', '.', ' '], '-', $db_url_title);
-            $db_url_title = preg_replace('/-+/', '-', $db_url_title);
-            $db_url_title = trim($db_url_title, '-');
-            
-            if($db_url_title === $url_title) {
+            if($this->cleanTitle($anime->title) === $url_title) {
                 return $anime;
             }
         }
@@ -79,5 +81,29 @@ class fetchAnimeModel extends CI_Model {
             return json_decode($result->urls, true);
         }
         return null;
+    }
+
+    public function searchAnime($query) {
+        $query = trim($query);
+        
+        $this->db->select('*, 
+            CASE 
+                WHEN LOWER(title) = LOWER("'.$query.'") THEN 1
+                WHEN LOWER(title) LIKE LOWER("'.$query.'%") THEN 2
+                ELSE 3 
+            END as match_priority'
+        );
+        
+        $this->db->group_start()
+            ->like('title', $query, 'both')
+            ->or_like('category', $query, 'both')
+            ->group_end();
+            
+        $this->db->order_by('match_priority', 'ASC')
+            ->order_by('title', 'ASC')
+            ->limit(6);
+            
+        $query = $this->db->get('animeseries');
+        return $query->result();
     }
 }

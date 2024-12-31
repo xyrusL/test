@@ -1,14 +1,14 @@
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/css/style.css">
 
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
     <script>
         let baseUrl = '<?php echo base_url(); ?>';
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-	<script defer src="<?php echo base_url('assets/js/player.js'); ?>"></script>
+    <script defer src="<?php echo base_url('assets/js/player.js'); ?>"></script>
 </head>
 
 <body>
@@ -16,6 +16,27 @@
     <div id="loadcontainer" style="display: none;">
         <div class="loadindicator"></div>
     </div>
+    
+    <div class="toppart">
+        <h1 style="display:none;">Watch anime online animixplay</h1>
+        <div id="songContent" class="floattopsearch">
+            <a id="backiconhome"><i class="glyphicon glyphicon-chevron-left"></i></a>
+            <a id="homeicon" href="http://localhost/test/"><i class="glyphicon glyphicon-home"></i></a>
+            <div id="searchbox">
+                <input type="text" style="display:none">
+                <input type="password" style="display:none">
+                <a href="http://localhost/test/"><img class="webtitle" alt="AnimixPlay" src="http://localhost/test/assets/logo.png"></a>
+                <input class="form-control searchbar" placeholder="Search" autocomplete="off" id="q" type="search">
+                <button id="searchbutton"><i class="glyphicon glyphicon-search"></i></button>
+                <a class="topmenubtn" title="Random anime" href=""><i class="glyphicon glyphicon-random"></i> Random</a>
+                <a class="topmenubtn" title="A-Z List" href="">A-Z List</a>
+            </div>
+            <span id="usernametop"></span>
+            <button id="menumobilebtn"><i class="glyphicon glyphicon-menu-hamburger"></i></button>
+            <button id="showsearchbtn"><i class="glyphicon glyphicon-search"></i></button>
+        </div>
+    </div>
+
     <div class="playersidebar">
         <div style="border: 1px solid #2a2a 2a;">
             <i class="closebtn glyphicon glyphicon-remove" id="menuclose" onclick="showmobilemenu()"></i>
@@ -184,7 +205,7 @@
             <div class="loadindicator"></div>
         </div>
         <div id="iframecontainer">
-            <iframe id="iframeplayer" allowfullscreen="true" scrolling="no" src="" style="min-height: 0px;"></iframe>
+            <iframe id="iframeplayer" allowfullscreen="true"  sandbox="allow-scripts allow-same-origin" scrolling="no" src="" style="min-height: 0px;"></iframe>
         </div>
         <select id="srcselect" onchange="srcChange()" style="display: none;"></select>
         <div id="lowerplayerpage">
@@ -230,8 +251,8 @@
                 </span>
             </div>
             <div id="epslistplace" style="display: grid;">
-                <?php for($i = 1; $i <= $episode_count; $i++): ?>
-                <button class="playbutton btn btn-primary"><?php echo $i; ?></button>
+                <?php for ($i = 1; $i <= $episode_count; $i++): ?>
+                    <button class="playbutton btn btn-primary"><?php echo $i; ?></button>
                 <?php endfor; ?>
             </div>
             <div id="flexbottom" style="display: flex;">
