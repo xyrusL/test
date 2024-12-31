@@ -133,6 +133,7 @@
 						<?php foreach (array_slice($animeSeries, 0, 24) as $anime): ?>
 							<li>
 								<?php 
+								// Remove special characters
 								$clean_title = preg_replace('/[♥♡☆→()]/u', '', $anime->title);						
 								$url_title = strtolower($clean_title);
 								$url_title = str_replace([':', '+', '!', '?', '.', ' '], '-', $url_title);
@@ -284,8 +285,4 @@
 		</a>
 	</div>
 </body>
-<script>
-
-
-</script>
 </html>

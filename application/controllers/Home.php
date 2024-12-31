@@ -87,6 +87,13 @@ class Home extends CI_Controller {
         echo json_encode($result);
     }
 
+    public function getRandomAnime()
+    {
+        $this->load->model('fetchAnimeModel');
+        $randomAnime = $this->fetchAnimeModel->getRandomAnime();
+        echo json_encode($randomAnime);
+    }
+
     public function watch($title = '')
     {
         if (empty($title)) {

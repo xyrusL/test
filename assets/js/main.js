@@ -13,7 +13,9 @@ const CONFIG = {
 let offSet = CONFIG.initialOffset;
 let currentType = ANIME_TYPES.ALL;
 
+// Appends an anime item to the layout
 function appendLayout(anime) {
+    // Clean and format the title
     const cleanTitle = anime.title.replace(/[♥♡☆→()]/g, '');
     const formattedTitle = cleanTitle.toLowerCase()
         .replace(/[:+!?. ]/g, '-')
@@ -44,11 +46,13 @@ function appendLayout(anime) {
     $('.searchresult').append(template);
 }
 
+// Displays a message for followed animes
 function showFollowed() {
     $('.searchresult, #bottommsg').empty();
     $('#bottommsg').append("You have no followed animes");
 }
 
+// Fetches anime data based on the specified type
 function fetchingAnimeData(type) {
     currentType = type === 'getAllAnime' ? ANIME_TYPES.ALL : 
                  type === 'getDubAnime' ? ANIME_TYPES.DUB : 
@@ -85,6 +89,7 @@ function fetchingAnimeData(type) {
     });
 }
 
+// Loads more anime items for pagination
 function loadPagination() {
     const $loadMoreBtn = $('#loadmorelist');
     const originalText = $loadMoreBtn.html();
@@ -119,6 +124,7 @@ function loadPagination() {
     });
 }
 
+// Cleans and formats the title for URL use
 function cleanTitle(title) {
     return title
         .toLowerCase()
@@ -127,6 +133,7 @@ function cleanTitle(title) {
         .replace(/^-+|-+$/g, '');
 }
 
+// Event listener for quick search
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('q');
 
@@ -184,12 +191,39 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
+        // Hide the quick search container when clicking outside
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.quicksearchcontainer') && !e.target.closest('#searchbox')) {
                 $('.quicksearchcontainer').hide();
             }
         });
     }
+
+    // Event listener for Random button
+    $(document).on('click', '.topmenubtn', function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: baseUrl + 'home/getRandomAnime',
+            type: 'GET',
+            success: function(response) {
+                try {
+                    const anime = JSON.parse(response);
+                    if (anime && anime.title) {
+                        const cleanedTitle = cleanTitle(anime.title);
+                        console.log(cleanedTitle);
+                        window.location.href = baseUrl + 'home/watch/' + cleanedTitle;
+                    } else {
+                        console.error('Invalid anime data received');
+                    }
+                } catch (error) {
+                    console.error('Error parsing random anime data:', error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching random anime:', error);
+            }
+        });
+    });
 
     $(document).on('click', '#loadmorelist', loadPagination);
     $('#showDub').click(() => fetchingAnimeData('getDubAnime'));
