@@ -24,10 +24,15 @@ function appendLayout(anime) {
 `);  
 }
 
+function showFollowed() {
+    $('.searchresult').empty();
+    $('#bottommsg').html('You have not followed any anime yet.'); 
+}
+
 function fetchingAnimeData(type) {
     currentType = type === 'getAllAnime' ? 'all' : (type === 'getDubAnime' ? 'dub' : (type === 'getSubAnime' ? 'sub' : 'movie'));
-    $('#loadmorelist').html('<i class="glyphicon glyphicon-menu-down"></i> Load More');
-
+    $('#bottommsg').html('<div id="loadmorelist"><i class="glyphicon glyphicon-menu-down"></i> Load more</div>');
+    
     $.ajax({
         url: `${baseUrl}/Home/${type}`,
         type: 'POST',
@@ -37,6 +42,7 @@ function fetchingAnimeData(type) {
                 $('.searchresult').empty(); 
                 $('#loadmorelist').hide();
                 $('#loadingtext').css('display', 'block');
+                $("loadmorelist").show();
                 
                 data.forEach(anime => appendLayout(anime));
             }
@@ -66,6 +72,7 @@ function loadPagination() {
             if (data && data.length > 0) {
                 data.forEach(anime => appendLayout(anime));
                 offSet += itemsPerLoad; 
+                $loadMoreBtn.html(originalText);
             } else {
                 $loadMoreBtn.html('No More Posts');
             }
@@ -80,4 +87,5 @@ function loadPagination() {
 $('#showDub').click(() => fetchingAnimeData('getDubAnime'));
 $('#showAll').click(() => fetchingAnimeData('getAllAnime'));
 $('#showMovie').click(() => fetchingAnimeData('getMovieAnime'));
+$('#showFollowed').click(showFollowed);
 $('#loadmorelist').click(loadPagination);
