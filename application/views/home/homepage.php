@@ -8,7 +8,7 @@
 	<!--fonts-->
 	<link href='https://fonts.googleapis.com' rel='preconnect'/>
 	<link crossorigin='' href='https://fonts.gstatic.com' rel='preconnect'/>
-	<link href='https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=Lexend:wght@100..900&display=swap' rel='stylesheet'/>
+	<link href='https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=Lexend:wght@100..900&family=Lexus+Sans+Serif:wght@300;400;700&display=swap' rel='stylesheet'/>
 
     <!--JS-->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
@@ -89,7 +89,7 @@
 					<br> 
 					Read more info in our <a href="https://animixplay.to/info.html">info</a> page.<br>
 				</div>
-				<button type="button" id="readmorebtn" onclick="readmore()" class="btn btn-secondary btn-sm btn-lg btn-block">
+				<button type="button" id="readmorebtn" class="btn btn-secondary btn-sm btn-lg btn-block">
 					<i class="glyphicon glyphicon-menu-down"></i>
 				</button>
 				<button type="button" id="openschedulebtn" onclick="showschedulemenu()">
@@ -191,6 +191,7 @@
 				</div>
 				<div class="rightcard">
 					<div class="flexrightcard" id="seasonfilter">
+						
 						<div id="seasonleft">
 							<label for="seasonselect">Season:</label>
 							<select id="seasonselect">
@@ -211,8 +212,35 @@
 				</div>
 				<div class="rightcard">
 					<div class="subtitleright">Genres</div>
-					<div class="flexrightcard" id="genreplace">Action, Adult Cast, Adventure, Anthropomorphic, Avant Garde, Award Winning, Cgdct, Childcare, Combat Sports, Comedy, Crossdressing, Delinquents, Detective, Drama, Ecchi, Educational, Erotica, Fantasy, Gag Humor, Gore, Gourmet, Harem, High Stakes Game, Historical, Horror, Idols Female, Idols Male, Isekai, Iyashikei, Josei, Kids, Love Polygon, Magical Sex Shift, Mahou Shoujo, Martial Arts, Mecha, Medical, Military, Music, Mystery, Mythology, Organized Crime, Otaku Culture, Parody, Performing Arts, Pets, Psychological, Racing, Reincarnation, Reverse Harem, Romance, Romantic Subtext, Samurai, School, Sci-Fi, Shoujo, Seinen, Shounen, Showbiz, Slice Of Life, Space, Sports, Strategy Game, Super Power, Supernatural, Survival, Suspense, Team Sports, Time Travel, Vampire, Video Game, Visual Arts, Workplace</div>
-					<button type="button" id="expandbtn" onclick="expandgenre()" class="btn btn-secondary btn-sm btn-lg btn-block"><i class="glyphicon glyphicon-menu-down"></i></button>
+					<div class="flexrightcard" id="genreplace" style="visibility: visible;">
+						<?php
+						$genres = [
+							"Action", "Adult Cast", "Adventure", "Anthropomorphic", "Avant Garde", "Award Winning", "Cgdct", "Childcare", 
+							"Combat Sports", "Comedy", "Crossdressing", "Delinquents", "Detective", "Drama", "Ecchi", "Educational", 
+							"Erotica", "Fantasy", "Gag Humor", "Gore", "Gourmet", "Harem", "High Stakes Game", "Historical", "Horror", 
+							"Idols Female", "Idols Male", "Isekai", "Iyashikei", "Josei", "Kids", "Love Polygon", "Magical Sex Shift", 
+							"Mahou Shoujo", "Martial Arts", "Mecha", "Medical", "Military", "Music", "Mystery", "Mythology", 
+							"Organized Crime", "Otaku Culture", "Parody", "Performing Arts", "Pets", "Psychological", "Racing", 
+							"Reincarnation", "Reverse Harem", "Romance", "Romantic Subtext", "Samurai", "School", "Sci-Fi", "Shoujo", 
+							"Seinen", "Shounen", "Showbiz", "Slice Of Life", "Space", "Sports", "Strategy Game", "Super Power", 
+							"Supernatural", "Survival", "Suspense", "Team Sports", "Time Travel", "Vampire", "Video Game", "Visual Arts", 
+							"Workplace"
+						];
+						echo '<div class="genresgrid form-check">';
+
+						foreach ($genres as $genre) {
+							$id = 'gen-' . str_replace(' ', '', $genre); 
+							echo '<div>';
+							echo '<input class="form-check-input" type="checkbox" id="' . $id . '" value="' . $genre . '">';
+							echo '<label class="form-check-label" for="' . $id . '">' . $genre . '</label>';
+							echo '</div>';
+						}
+						echo '</div>';
+						?>
+					</div>
+					<button type="button" id="expandbtn" class="btn btn-secondary btn-sm btn-lg btn-block">
+						<i class="glyphicon glyphicon-menu-down"></i>
+					</button>
 				</div>
 				<div class="rightcard" style="display:none; border-top: 1px solid #3c3c3c;">
 					<div class="flexrightcard" id="filterplace">
@@ -241,7 +269,9 @@
 				<div class="rightcard" style="margin-bottom:20px">
 					<div class="subtitleright">Weekly Top</div>
 					<div id="ongoingplace" style="height:unset"></div>
-					<button type="button" id="expandbtn2" onclick="expandweekly()" class="btn btn-secondary btn-sm btn-lg btn-block"><i class="glyphicon glyphicon-menu-down"></i></button>
+					<button type="button" id="expandbtn2" onclick="expandweekly()" class="btn btn-secondary btn-sm btn-lg btn-block">
+						<i class="glyphicon glyphicon-menu-down"></i>
+					</button>
 				</div>
 			</div>
 		</div>

@@ -13,6 +13,35 @@ const CONFIG = {
 let offSet = CONFIG.initialOffset;
 let currentType = ANIME_TYPES.ALL;
 
+// Expands or collapses the genre list
+function expandGenre() {
+    const $genreplace = $('#genreplace');
+    const $expandBtn = $('#expandbtn i');
+    
+    if ($genreplace.height() === 872) {
+        $genreplace.css('height', ' 205px');
+        $expandBtn.removeClass('glyphicon-menu-up').addClass('glyphicon-menu-down');
+    } else {
+        $genreplace.css('height', '872px');
+        $expandBtn.removeClass('glyphicon-menu-down').addClass('glyphicon-menu-up');
+    }
+}
+
+// Expands or collapses the announcement
+function expandAnnouncement() {
+    const $announcement = $('#announcement');
+    const $expandBtn = $('#readmorebtn i');
+    const currentHeight = $announcement.height();
+    
+    if (currentHeight > 100) {  
+        $announcement.animate({ height: '48px' });
+        $expandBtn.removeClass('glyphicon-menu-up').addClass('glyphicon-menu-down');
+    } else {  
+        $announcement.animate({ height: '214px' });
+        $expandBtn.removeClass('glyphicon-menu-down').addClass('glyphicon-menu-up');
+    }
+}
+
 // Appends an anime item to the layout
 function appendLayout(anime) {
     // Clean and format the title
@@ -230,4 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#showAll').click(() => fetchingAnimeData('getAllAnime'));
     $('#showMovie').click(() => fetchingAnimeData('getMovieAnime'));
     $('#showFollowed').click(showFollowed);
+
+    $('#expandbtn').click(expandGenre);
+    $('#readmorebtn').click(expandAnnouncement);
 });
