@@ -45,12 +45,10 @@ class fetchAnimeModel extends CI_Model {
         $this->db->select('*');
         $this->db->from('animeseries');
         
-        // Get all anime and filter in PHP since MySQL REGEXP is causing issues
         $query = $this->db->get();
         $all_anime = $query->result();
         
         foreach($all_anime as $anime) {
-            // Clean the title same way as in homepage
             $clean_title = preg_replace('/[♥♡☆→]/u', '', $anime->title);
             $db_url_title = strtolower($clean_title);
             $db_url_title = str_replace([':', '+', '!', '?', '.', ' '], '-', $db_url_title);

@@ -71,7 +71,6 @@ class Home extends CI_Controller {
 
         $this->load->model('fetchAnimeModel');
         
-        // Get anime by title
         $data['anime'] = $this->fetchAnimeModel->getAnimeByTitle($title);
         
         if (!$data['anime']) {
