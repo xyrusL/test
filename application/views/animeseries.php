@@ -2,6 +2,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/css/style.css">
 </head>
+
 <body>
     <div id="coverlight" style="z-index:8"></div>
     <div id="loadcontainer" style="display: none;">
@@ -132,7 +133,7 @@
                     <option value="Planned">On-Hold</option>
                     <option value="PTW">Plan to Watch</option>
                     <option value="Finished">Finished</option>
-                </select> 
+                </select>
                 <div class="flexrightcard">
                     <div class="halfleft2">
                         Current : <div id="progressnumber">22</div>
@@ -156,7 +157,7 @@
             <div id="toprightplayer">
                 <i onclick="switchToLive();" class="proxybtn glyphicon glyphicon glyphicon-transfer" style="color: white;">
                     <span class="tooltiptext">Switch</span>
-                </i> 
+                </i>
                 <i onclick="lighttoggle();" class="lightbtn glyphicon glyphicon-sunglasses">
                     <span class="tooltiptext">Lights</span>
                 </i>
@@ -165,7 +166,7 @@
                 </i>
                 <i onclick="toggleautoplay();" class="autoplaybutton glyphicon glyphicon-flash">
                     <span class="tooltiptext">Autoplay</span>
-                </i> 
+                </i>
                 <i onclick="playnext()" id="nextbtn" class="glyphicon glyphicon-forward" style="cursor: pointer;">
                     <span class="tooltiptext">Next ep</span>
                 </i>
@@ -183,19 +184,19 @@
                 <div id="streamtypecontainer">
                     <div id="streamtype">GOGO Stream</div>
                     <div id="showrecomendbtn" onclick="showrecomendmenu();" style="display: inline-block;">
-                        <i class="glyphicon glyphicon-cog"></i> 
+                        <i class="glyphicon glyphicon-cog"></i>
                         <span id="changetext">Change</span>
                     </div>
                     <div id="sharebtn">
-                        <i class="glyphicon glyphicon-share-alt"></i> 
+                        <i class="glyphicon glyphicon-share-alt"></i>
                         <span id="shareText" style="display: inline;">Share</span>
                     </div>
                     <div id="openreport" onclick="reportError()" style="display: block;">
-                        <i class="glyphicon glyphicon-exclamation-sign"></i> 
+                        <i class="glyphicon glyphicon-exclamation-sign"></i>
                         <span class="reportText">Report</span>
                     </div>
                     <div id="reloadbtn" style="display: block;">
-                        <i class="glyphicon glyphicon-repeat"></i> 
+                        <i class="glyphicon glyphicon-repeat"></i>
                         <span class="reportText">Reload</span>
                     </div>
                     <div id="widescreenbtn">
@@ -210,10 +211,10 @@
                 <span class="animetitle">Sengoku Youko: Senma Konton-hen</span>
                 <button id="trackbtn" onclick="startTrack();">
                     <i class="glyphicon glyphicon-plus"></i> Watchlist
-                </button> 
+                </button>
                 <button id="followbtn" onclick="followtoggle();" style="display: inline;">
                     <i class="glyphicon glyphicon-bell"></i> Follow
-                </button> 
+                </button>
                 <br>
                 <div id="animeimage"></div>
                 <span id="notice" style="display: none;">
@@ -227,15 +228,15 @@
                 <div id="bottomleft">
                     <span id="genres">Genres : <a href="/?genre=action">action</a>, <a href="/?genre=adventure">adventure</a>, <a href="/?genre=fantasy">fantasy</a>, <a href="/?genre=historical">historical</a>, <a href="/?genre=mythology">mythology</a></span>
                     <br>
-                    <span id="status">Status : Ongoing</span> 
+                    <span id="status">Status : Ongoing</span>
                     <span id="animeinfobottom" style="display: block;">
                         <a id="animebtn2" href="/anime/292440">More info</a>
                     </span>
                     <br>
-                    <span id="status" class="scrollable"></span> 
+                    <span id="status" class="scrollable"></span>
                 </div>
                 <div class="epsavailable">
-                    Ep total : <span id="epsavailable">23</span> 
+                    Ep total : <span id="epsavailable">23</span>
                     <a onclick="updatecheck()" id="updatebtn">
                         <i class="glyphicon glyphicon-refresh"></i>
                     </a>
