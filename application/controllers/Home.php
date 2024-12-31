@@ -98,4 +98,20 @@ class Home extends CI_Controller {
         
         $this->load->view('animeseries', $data);
     }
+
+    public function getEpisodeUrl()
+    {
+        $animeId = $this->input->post('anime_id');
+        $episodeIndex = $this->input->post('episode_index');
+        
+        $this->load->model('fetchAnimeModel');
+        $urls = $this->fetchAnimeModel->getAnimeUrls($animeId);
+        
+        $response = ['url' => null];
+        if ($urls && isset($urls[$episodeIndex])) {
+            $response['url'] = $urls[$episodeIndex];
+        }
+        
+        echo json_encode($response);
+    }
 }

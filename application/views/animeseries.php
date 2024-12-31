@@ -1,6 +1,11 @@
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/css/style.css">
+    <script>
+        let baseUrl = '<?php echo base_url(); ?>';
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+	<script defer src="<?php echo base_url('assets/js/player.js'); ?>"></script>
 </head>
 
 <body>
@@ -176,7 +181,7 @@
             <div class="loadindicator"></div>
         </div>
         <div id="iframecontainer">
-            <iframe id="iframeplayer" allowfullscreen="true" scrolling="no" src="https://play.bunnycdn.to/embed-5/UWxwb05ERkJXU1pUV1NrWXp1TUFBQXQvLy94V2lrQ0FsMGxPQ0JBeUpKZ01LQUJBREhJREl4UUFCQXBBQUFwUUdBQlpJQUJVWUl4TkRKa2FaTk5HVElIcWFZMUdJSGttbTlVL1VNbnFhWk5OSHBEMUdKcGlQVUdoaE5xREJwa2g2YWl3QmdVVStBMU00d3lXT2tOMnZGeUNLTVpWVGVNWFFoMEpRazVZb0wwZnJSOTYwK2YweFNkeW1NY1RnSHUxb3hQLzBBc0c1UUJFUnZGM0pGT0ZDUUtSak80dw==" style="min-height: 0px;"></iframe>
+            <iframe id="iframeplayer" allowfullscreen="true" scrolling="no" src="https://terabox.com/sharing/embed?surl=uIdQEnEv9lLZ8P3fv1NO3Q&resolution=1080&autoplay=true&mute=false&uk=4399031334708&fid=164608139117131&slid=" style="min-height: 0px;"></iframe>
         </div>
         <select id="srcselect" onchange="srcChange()" style="display: none;"></select>
         <div id="lowerplayerpage">
@@ -203,7 +208,7 @@
                         <i class="glyphicon glyphicon-fullscreen"></i>
                     </div>
                 </div>
-                <a id="animebtn" href="/anime/<?php echo $anime->id; ?>" style="display: inline;">
+                <a id="animebtn" data-id="<?php echo $anime->id; ?>" style="display: inline;">
                     <svg stroke="currentColor" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="25" width="25" id="foldersvg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"></path>
                     </svg>

@@ -1,2 +1,25 @@
-1. The project use Codeigntier 3.1.11 and Xampp
-2. Use jquery function and boostrap for styling also custom css if needed
+Project Requirements:
+
+1. Framework and Environment:
+   - Use CodeIgniter 3.1.11 as the PHP framework.
+   - Set up and run the project on XAMPP for local development.
+
+2. Frontend Development:
+   - Use jQuery for DOM manipulation, event handling, and AJAX functionality.
+   - Use Bootstrap for responsive styling and layout.
+   - Add custom CSS for any additional styling not covered by Bootstrap.
+
+3. Code Quality and Structure:
+   - Follow MVC architecture as per CodeIgniter’s conventions.
+   - Write clean, maintainable, and reusable code.
+   - Use meaningful variable and function names for better readability.
+
+4. Database Integration:
+   - Use MySQL as the database system.
+   - Follow CodeIgniter’s Active Record for database queries.
+   - Ensure proper validation and sanitization of user inputs to prevent SQL injection.
+
+5. Security Best Practices:
+   - Implement CSRF protection for forms.
+   - Use XSS filtering for user inputs and outputs.
+   - Hash passwords using bcrypt or CodeIgniter’s encryption library.

@@ -68,4 +68,16 @@ class fetchAnimeModel extends CI_Model {
         $query = $this->db->get('animeseries');
         return $query->row();
     }
+
+    public function getAnimeUrls($animeId) {
+        $this->db->select('urls');
+        $this->db->where('id', $animeId);
+        $query = $this->db->get('animeseries');
+        
+        if ($query->num_rows() > 0) {
+            $result = $query->row();
+            return json_decode($result->urls, true);
+        }
+        return null;
+    }
 }
