@@ -2,10 +2,12 @@ let previousButton;
 const lastTime = JSON.parse(localStorage.getItem('lastTime')) || {};
 const animeId = $('#animebtn').data('id');
 
-if (!lastTime[animeId]) {
-    previousButton = $('.playbutton').first().prop('disabled', true);
-} else {
-    previousButton = $(`.playbutton:eq(${lastTime[animeId]})`).prop('disabled', true);
+function initializePreviousButton(animeId, lastTime) {
+    if (!lastTime[animeId]) {
+        return $('.playbutton').first().prop('disabled', true);
+    } else {
+        return $(`.playbutton:eq(${lastTime[animeId]})`).prop('disabled', true);
+    }
 }
 
 $('.playbutton').on('click', function() {
@@ -21,7 +23,8 @@ $('.playbutton').on('click', function() {
 });
 
 function appendPlayer() {
-    const episodeIndex = lastTime[animeId] || 0; 
+
+    const episodeIndex = lastTime[animeId] || 0;
     getEpisodes(episodeIndex, animeId);
 }
 
@@ -63,4 +66,5 @@ function handleBackNavigation() {
 }
 
 handleBackNavigation();
+previousButton = initializePreviousButton(animeId, lastTime);
 appendPlayer();
