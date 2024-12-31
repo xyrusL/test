@@ -9,7 +9,6 @@ if (!lastTime[animeId]) {
 }
 
 $('.playbutton').on('click', function() {
-    const episodeNumber = $(this).text();
     const episodeIndex = $(this).index();
     
     getEpisodes(episodeIndex, animeId);
@@ -21,7 +20,13 @@ $('.playbutton').on('click', function() {
     saveLastWatched(episodeIndex, animeId);
 });
 
+function appendPlayer() {
+    const episodeIndex = lastTime[animeId] || 0; 
+    getEpisodes(episodeIndex, animeId);
+}
+
 function getEpisodes(episodeIndex, animeId) {
+    $('#loadcontainer2').show();
     $.ajax({
         url: `${baseUrl}home/getEpisodeUrl`,
         method: 'POST',
@@ -34,6 +39,8 @@ function getEpisodes(episodeIndex, animeId) {
             } else {
                 console.error('Episode URL not found');
             }
+
+            $('#loadcontainer2').hide();
         },
         error: function(xhr, status, error) {
             console.error('Error fetching episode:', error);
@@ -56,3 +63,4 @@ function handleBackNavigation() {
 }
 
 handleBackNavigation();
+appendPlayer();

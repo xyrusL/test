@@ -1,6 +1,9 @@
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.css" rel="stylesheet">
+
     <script>
         let baseUrl = '<?php echo base_url(); ?>';
     </script>
@@ -177,11 +180,11 @@
                 </i>
             </div>
         </div>
-        <div id="loadcontainer2" style="display: none; overflow: hidden;">
+        <div id="loadcontainer2" style="display: block; overflow: hidden;">
             <div class="loadindicator"></div>
         </div>
         <div id="iframecontainer">
-            <iframe id="iframeplayer" allowfullscreen="true" scrolling="no" src="https://terabox.com/sharing/embed?surl=uIdQEnEv9lLZ8P3fv1NO3Q&resolution=1080&autoplay=true&mute=false&uk=4399031334708&fid=164608139117131&slid=" style="min-height: 0px;"></iframe>
+            <iframe id="iframeplayer" allowfullscreen="true" scrolling="no" src="" style="min-height: 0px;"></iframe>
         </div>
         <select id="srcselect" onchange="srcChange()" style="display: none;"></select>
         <div id="lowerplayerpage">
