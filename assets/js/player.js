@@ -59,15 +59,16 @@ function getEpisodes(episodeIndex, animeId) {
 // Check and set up the appropriate player based on the URL
 function checkPlayer(url) {
     const container = $('#iframecontainer');
-    const frame = $('#iframeplayer');
     const player = $('.altsourcenotif');
     const typeStream = $('#streamtype');
+    let isDownloadable = false;
 
     container.empty();
 
     if (url.includes('archive.org')) {
         player.text('Internal Player');
         typeStream.text('Malupet Stream');
+        isDownloadable = true;
 
         const video = $('<video>', { controls: true, playsinline: true })
             .append($('<source>', { src: url, type: 'video/mp4' }));
@@ -82,15 +83,37 @@ function checkPlayer(url) {
 
             if (url.includes('gdrive')) {
                 typeStream.text('Gdrive Stream');
-            } else if (url.includes('blogspot')) {
+                isDownloadable = true;
+            } else if (url.includes('blogger')) {
                 typeStream.text('Blog Stream');
             } else if (url.includes('terabox')) {
                 typeStream.text('Terabox Stream');
+                isDownloadable = true;
+            } else if (url.includes('youtube')) {
+                typeStream.text('YouTube Stream');
             }
         }
         container.append(`
             <iframe allowfullscreen='true' id="iframeplayer" sandbox="allow-scripts allow-same-origin" scrolling='no' src='${url}'/>
         `);
+    }
+
+    downloadEp(isDownloadable);
+}
+
+function downloadEp(isDownloadable) {
+    if (!isDownloadable) {
+        $('#downloadBtn').css({
+            'color': 'gray',
+            'cursor': 'default',
+            'pointer-events': 'none'
+        });
+    } else {
+        $('#downloadBtn').css({
+            'color': '',
+            'cursor': '',
+            'pointer-events': ''
+        });
     }
 }
 
@@ -139,6 +162,36 @@ $('#widescreenbtn').click(function() {
     });
 
     btn.children('i').attr('class', isFixed ? 'glyphicon glyphicon-fullscreen' : 'glyphicon glyphicon-remove');
+});
+
+
+// Event listener for light toggle
+$('#lighttoggleBtn').click(() => {
+    const player = $('#iframeplayer');
+    if (player.css('position') === 'relative') {
+        $('#coverlight').fadeOut(400, function() {
+            player.css({
+                'min-height': '',
+                'z-index': '',
+                'position': ''
+            });
+            $('#toprightplayer').css({
+                'z-index': '',
+                'position': ''
+            });
+        });
+    } else {
+        $('#coverlight').fadeIn(400);   
+        player.css({
+            'min-height': '0px',
+            'z-index': '22',
+            'position': 'relative'
+        });
+        $('#toprightplayer').css({
+            'z-index': '22',
+            'position': 'relative'
+        })
+    }
 });
 
 handleBackNavigation();
