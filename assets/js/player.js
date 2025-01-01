@@ -2,6 +2,7 @@ let previousButton;
 const lastTime = JSON.parse(localStorage.getItem('lastTime')) || {};
 const animeId = $('#animebtn').data('id');
 
+// Initialize the previous button based on the last watched episode
 function initializePreviousButton(animeId, lastTime) {
     if (!lastTime[animeId]) {
         return $('.playbutton').first().prop('disabled', true);
@@ -10,6 +11,7 @@ function initializePreviousButton(animeId, lastTime) {
     }
 }
 
+// Event listener for episode buttons
 $('.playbutton').on('click', function() {
     const episodeIndex = $(this).index();
     
@@ -22,11 +24,14 @@ $('.playbutton').on('click', function() {
     saveLastWatched(episodeIndex, animeId);
 });
 
+// Initialize the first load of the player
 function initializeFirstLoad() {
     const episodeIndex = lastTime[animeId] || 0;
+    $('#eptitleplace').text(`EP ${episodeIndex + 1}`);
     getEpisodes(episodeIndex, animeId);
 }
 
+// Fetch episode data from the server
 function getEpisodes(episodeIndex, animeId) {
     $('#loadcontainer2').show();
     $.ajax({
@@ -36,6 +41,7 @@ function getEpisodes(episodeIndex, animeId) {
         success: function(response) {
             const data = JSON.parse(response);
             if (data.url) {
+                $('#eptitleplace').text(`EP ${episodeIndex + 1}`);
                 checkPlayer(data.url);
                 saveLastWatched(episodeIndex, animeId);
             } else {
@@ -50,32 +56,52 @@ function getEpisodes(episodeIndex, animeId) {
     });
 }
 
+// Check and set up the appropriate player based on the URL
 function checkPlayer(url) {
     const container = $('#iframecontainer');
-    
+    const frame = $('#iframeplayer');
+    const player = $('.altsourcenotif');
+    const typeStream = $('#streamtype');
+
+    container.empty();
+
     if (url.includes('archive.org')) {
-        $('.altsourcenotif').text('Internal Player');
-        container.empty();
+        player.text('Internal Player');
+        typeStream.text('Malupet Stream');
 
         const video = $('<video>', { controls: true, playsinline: true })
             .append($('<source>', { src: url, type: 'video/mp4' }));
         container.append($('<div>', { id: 'iframeplayer' }).append(video));
         new Plyr(video[0]);
     } else {
-        if (url.includes('blogspot.com')) {
-            $('#iframeplayer').attr('src', url);
+        if (url.includes('short')) {
+            player.text('External Player (Ads)');
+            typeStream.text('Video Stream');
+        } else {
+            player.text('External Player');
+
+            if (url.includes('gdrive')) {
+                typeStream.text('Gdrive Stream');
+            } else if (url.includes('blogspot')) {
+                typeStream.text('Blog Stream');
+            } else if (url.includes('terabox')) {
+                typeStream.text('Terabox Stream');
+            }
         }
-
+        container.append(`
+            <iframe allowfullscreen='true' id="iframeplayer" sandbox="allow-scripts allow-same-origin" scrolling='no' src='${url}'/>
+        `);
     }
-
 }
 
+// Save the last watched episode to local storage
 function saveLastWatched(index, id) {
     const lastTime = JSON.parse(localStorage.getItem('lastTime')) || {};
     lastTime[id] = index;
     localStorage.setItem('lastTime', JSON.stringify(lastTime));
 }
 
+// Handle back navigation
 function handleBackNavigation() {
     window.addEventListener('popstate', function(event) {
         window.location.href = '/test';
@@ -84,10 +110,7 @@ function handleBackNavigation() {
     history.pushState(null, '', window.location.href);
 }
 
-handleBackNavigation();
-previousButton = initializePreviousButton(animeId, lastTime);
-initializeFirstLoad();
-
+// Event listener for widescreen button
 $('#widescreenbtn').click(function() {
     const iframe = $('#iframeplayer');
     const btn = $(this);
@@ -117,3 +140,7 @@ $('#widescreenbtn').click(function() {
 
     btn.children('i').attr('class', isFixed ? 'glyphicon glyphicon-fullscreen' : 'glyphicon glyphicon-remove');
 });
+
+handleBackNavigation();
+initializeFirstLoad();
+previousButton = initializePreviousButton(animeId, lastTime);

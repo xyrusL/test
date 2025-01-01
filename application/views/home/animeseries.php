@@ -187,7 +187,7 @@
     <div class="playerpage" style="background-color: rgb(35, 35, 35);">
         <div class="subpart eptitle">
             <div id="eptitle">
-                <span id="eptitleplace">EP 22</span>
+                <span id="eptitleplace">EP ?</span>
                 <span class="altsourcenotif">External Player</span>
             </div>
             <div id="toprightplayer">
