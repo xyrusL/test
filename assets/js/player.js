@@ -54,6 +54,7 @@ function checkPlayer(url) {
     const container = $('#iframecontainer');
     
     if (url.includes('archive.org')) {
+        $('.altsourcenotif').text('Internal Player');
         container.empty();
 
         const video = $('<video>', { controls: true, playsinline: true })
@@ -61,7 +62,10 @@ function checkPlayer(url) {
         container.append($('<div>', { id: 'iframeplayer' }).append(video));
         new Plyr(video[0]);
     } else {
-        $('#iframeplayer').attr('src', url);
+        if (url.includes('blogspot.com')) {
+            $('#iframeplayer').attr('src', url);
+        }
+
     }
 
 }
