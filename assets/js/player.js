@@ -12,9 +12,9 @@ function initializePreviousButton(animeId, lastTime) {
 }
 
 // Event listener for episode buttons
-$('.playbutton').on('click', function() {
+$('.playbutton').on('click', function () {
     const episodeIndex = $(this).index();
-    
+
     getEpisodes(episodeIndex, animeId);
     if (previousButton) {
         previousButton.prop('disabled', false);
@@ -38,7 +38,7 @@ function getEpisodes(episodeIndex, animeId) {
         url: `${baseUrl}home/getEpisodeUrl`,
         method: 'POST',
         data: { anime_id: animeId, episode_index: episodeIndex },
-        success: function(response) {
+        success: function (response) {
             const data = JSON.parse(response);
             if (data.url) {
                 $('#eptitleplace').text(`EP ${episodeIndex + 1}`);
@@ -50,7 +50,7 @@ function getEpisodes(episodeIndex, animeId) {
 
             setTimeout(() => $('#loadcontainer2').hide(), 1000);
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error('Error fetching episode:', error);
         }
     });
@@ -61,14 +61,13 @@ function checkPlayer(url) {
     const container = $('#iframecontainer');
     const player = $('.altsourcenotif');
     const typeStream = $('#streamtype');
-    let isDownloadable = false;
 
     container.empty();
 
     if (url.includes('archive.org')) {
         player.text('Internal Player');
         typeStream.text('Malupet Stream');
-        isDownloadable = true;
+
 
         const video = $('<video>', { controls: true, playsinline: true })
             .append($('<source>', { src: url, type: 'video/mp4' }));
@@ -83,12 +82,10 @@ function checkPlayer(url) {
 
             if (url.includes('gdrive')) {
                 typeStream.text('Gdrive Stream');
-                isDownloadable = true;
             } else if (url.includes('blogger')) {
                 typeStream.text('Blog Stream');
             } else if (url.includes('terabox')) {
                 typeStream.text('Terabox Stream');
-                isDownloadable = true;
             } else if (url.includes('youtube')) {
                 typeStream.text('YouTube Stream');
             }
@@ -96,26 +93,6 @@ function checkPlayer(url) {
         container.append(`
             <iframe allowfullscreen='true' id="iframeplayer" sandbox="allow-scripts allow-same-origin" scrolling='no' src='${url}'/>
         `);
-    }
-
-    downloadEp(isDownloadable, isDownloadable ? url : null);
-}
-
-// Check if the episode is downloadable
-function downloadEp(isDownloadable, url) {
-    if (!isDownloadable) {
-        $('#downloadBtn').css({
-            'color': 'gray',
-            'cursor': 'default',
-            'pointer-events': 'none'
-        });
-    } else {
-        $('#downloadBtn').css({
-            'color': '',
-            'cursor': '',
-            'pointer-events': ''
-        });
-        window.open(url, '_blank');
     }
 }
 
@@ -128,7 +105,7 @@ function saveLastWatched(index, id) {
 
 // Handle back navigation
 function handleBackNavigation() {
-    window.addEventListener('popstate', function(event) {
+    window.addEventListener('popstate', function (event) {
         window.location.href = '/test';
     });
 
@@ -136,7 +113,7 @@ function handleBackNavigation() {
 }
 
 // Event listener for widescreen button
-$('#widescreenbtn').click(function() {
+$('#widescreenbtn').click(function () {
     const iframe = $('#iframeplayer');
     const btn = $(this);
     const isFixed = iframe.css('position') === 'fixed';
@@ -171,7 +148,7 @@ $('#widescreenbtn').click(function() {
 $('#lighttoggleBtn').click(() => {
     const player = $('#iframeplayer');
     if (player.css('position') === 'relative') {
-        $('#coverlight').fadeOut(400, function() {
+        $('#coverlight').fadeOut(400, function () {
             player.css({
                 'min-height': '',
                 'z-index': '',
@@ -183,7 +160,7 @@ $('#lighttoggleBtn').click(() => {
             });
         });
     } else {
-        $('#coverlight').fadeIn(400);   
+        $('#coverlight').fadeIn(400);
         player.css({
             'min-height': '0px',
             'z-index': '22',
