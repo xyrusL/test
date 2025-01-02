@@ -1,25 +1,6 @@
-<head>
-    <title><?php echo $title; ?></title>
-
-    <!--fonts-->
-	<link href='https://fonts.googleapis.com' rel='preconnect'/>
-	<link crossorigin='' href='https://fonts.gstatic.com' rel='preconnect'/>
-	<link href='https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=Lexend:wght@100..900&family=Lexus+Sans+Serif:wght@300;400;700&display=swap' rel='stylesheet'/>
-    
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/css/style.css">
-
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
-    <script>
-        let baseUrl = '<?php echo base_url(); ?>';
-    </script>
-    <script src="<?php echo base_url('assets/js/player.js'); ?>" defer></script>
-</head>
-
+<?php $this->load->view('home/template/header'); ?>
 <body>
-    <?php include 'navbar.php';?>
+<?php $this->load->view('home/template/navbar'); ?>
     <div class="playersidebar">
         <div style="border: 1px solid #2a2a 2a;">
             <i class="closebtn glyphicon glyphicon-remove" id="menuclose" onclick="showmobilemenu()"></i>
