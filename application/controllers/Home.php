@@ -94,6 +94,14 @@ class Home extends CI_Controller {
         echo json_encode($randomAnime);
     }
 
+    public function getAnimeById()
+    {
+        $this->load->model('fetchAnimeModel');
+        $id = $this->input->post('id');
+        $result = $this->fetchAnimeModel->getAnimeById($id);
+        echo json_encode($result);
+    }
+
     public function watch($title = '')
     {
         if (empty($title)) {
@@ -101,7 +109,6 @@ class Home extends CI_Controller {
         }
 
         $this->load->model('fetchAnimeModel');
-        
         $data['anime'] = $this->fetchAnimeModel->getAnimeByTitle($title);
         
         if (!$data['anime']) {

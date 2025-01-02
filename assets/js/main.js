@@ -13,38 +13,25 @@ const CONFIG = {
 let offSet = CONFIG.initialOffset;
 let currentType = ANIME_TYPES.ALL;
 
-// Expands or collapses the genre list
 function expandGenre() {
     const $genreplace = $('#genreplace');
     const $expandBtn = $('#expandbtn i');
     
-    if ($genreplace.height() === 872) {
-        $genreplace.css('height', ' 205px');
-        $expandBtn.removeClass('glyphicon-menu-up').addClass('glyphicon-menu-down');
-    } else {
-        $genreplace.css('height', '872px');
-        $expandBtn.removeClass('glyphicon-menu-down').addClass('glyphicon-menu-up');
-    }
+    const isExpanded = $genreplace.height() === 872;
+    $genreplace.css('height', isExpanded ? '205px' : '872px');
+    $expandBtn.toggleClass('glyphicon-menu-up glyphicon-menu-down');
 }
 
-// Expands or collapses the announcement
 function expandAnnouncement() {
     const $announcement = $('#announcement');
     const $expandBtn = $('#readmorebtn i');
-    const currentHeight = $announcement.height();
     
-    if (currentHeight > 100) {  
-        $announcement.animate({ height: '48px' });
-        $expandBtn.removeClass('glyphicon-menu-up').addClass('glyphicon-menu-down');
-    } else {  
-        $announcement.animate({ height: '214px' });
-        $expandBtn.removeClass('glyphicon-menu-down').addClass('glyphicon-menu-up');
-    }
+    const isExpanded = $announcement.height() > 100;
+    $announcement.animate({ height: isExpanded ? '48px' : '214px' });
+    $expandBtn.toggleClass('glyphicon-menu-up glyphicon-menu-down');
 }
 
-// Appends an anime item to the layout
 function appendLayout(anime) {
-    // Clean and format the title
     const cleanTitle = anime.title.replace(/[♥♡☆→()]/g, '');
     const formattedTitle = cleanTitle.toLowerCase()
         .replace(/[:+!?. ]/g, '-')
@@ -75,17 +62,53 @@ function appendLayout(anime) {
     $('.searchresult').append(template);
 }
 
-// Displays a message for followed animes
 function showFollowed() {
     $('.searchresult, #bottommsg').empty();
-    $('#bottommsg').append("You have no followed animes");
+    $('#loadingtext').show();
+    
+    const followedByUser = localStorage.getItem('followedByUser');
+
+    if (!followedByUser || JSON.parse(followedByUser).length === 0) {
+        $('#loadingtext').hide();
+        $('#bottommsg').append("You have no followed animes");
+        return;
+    }
+
+    const followedIds = JSON.parse(followedByUser);
+    let loadedCount = 0;
+
+    followedIds.forEach(id => {
+        $.ajax({
+            url: `${baseUrl}/Home/getAnimeById`,
+            type: 'POST',
+            data: { id },
+            success: function(response) {
+                try {
+                    const data = JSON.parse(response);
+                    if (data) {
+                        appendLayout(data);
+                    }
+                } catch (error) {
+                    console.error('Error parsing response:', error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', error);
+            },
+            complete: function() {
+                loadedCount++;
+                if (loadedCount === followedIds.length) {
+                    $('#loadingtext').hide();
+                }
+            }
+        });
+    });
 }
 
-// Fetches anime data based on the specified type
 function fetchingAnimeData(type) {
     currentType = type === 'getAllAnime' ? ANIME_TYPES.ALL : 
-                 type === 'getDubAnime' ? ANIME_TYPES.DUB : 
-                 type === 'getSubAnime' ? ANIME_TYPES.SUB : ANIME_TYPES.MOVIE;
+                  type === 'getDubAnime' ? ANIME_TYPES.DUB : 
+                  type === 'getSubAnime' ? ANIME_TYPES.SUB : ANIME_TYPES.MOVIE;
                  
     $('.searchresult, #bottommsg').empty();
     $('#loadingtext').show();
@@ -97,7 +120,6 @@ function fetchingAnimeData(type) {
             try {
                 const data = JSON.parse(response);
                 if (data?.length) { 
-                    console.log(data);
                     $('#loadingtext').hide();
                     data.forEach(appendLayout);
                     $('#bottommsg').append(`
@@ -118,7 +140,6 @@ function fetchingAnimeData(type) {
     });
 }
 
-// Loads more anime items for pagination
 function loadPagination() {
     const $loadMoreBtn = $('#loadmorelist');
     const originalText = $loadMoreBtn.html();
@@ -127,10 +148,7 @@ function loadPagination() {
     $.ajax({
         url: `${baseUrl}/Home/loadMore`,
         type: 'POST',
-        data: { 
-            offSet, 
-            currentType
-        },
+        data: { offSet, currentType },
         success: function(response) {
             try {
                 const data = JSON.parse(response);
@@ -153,7 +171,6 @@ function loadPagination() {
     });
 }
 
-// Cleans and formats the title for URL use
 function cleanTitle(title) {
     return title
         .toLowerCase()
@@ -162,7 +179,6 @@ function cleanTitle(title) {
         .replace(/^-+|-+$/g, '');
 }
 
-// Event listener for quick search
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('q');
 
@@ -193,11 +209,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <a href="${baseUrl}watch/${cleanTitle(anime.title)}" title="${anime.title}">
                                             <li>
                                                 <div class="searchimg">
-                                                    <img class="resultimg2" src="${anime.poster}">
+                                                    <img class="resultimg2" src="${anime.poster}" alt="${anime.title}">
                                                 </div>
                                                 <div class="details">
                                                     <p class="name">${anime.title}</p>
-                                                    <p class="infotext">${anime.title}<br>${anime.category}</p>
+                                                    <p class="infotext">${anime.category}</p>
                                                 </div>
                                             </li>
                                         </a>
@@ -220,7 +236,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Hide the quick search container when clicking outside
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.quicksearchcontainer') && !e.target.closest('#searchbox')) {
                 $('.quicksearchcontainer').hide();
@@ -228,19 +243,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Event listener for Random button
     $(document).on('click', '.topmenubtn', function(e) {
         e.preventDefault();
         $.ajax({
-            url: baseUrl + 'home/getRandomAnime',
+            url: `${baseUrl}home/getRandomAnime`,
             type: 'GET',
             success: function(response) {
                 try {
                     const anime = JSON.parse(response);
                     if (anime && anime.title) {
                         const cleanedTitle = cleanTitle(anime.title);
-                        console.log(cleanedTitle);
-                        window.location.href = baseUrl + 'home/watch/' + cleanedTitle;
+                        window.location.href = `${baseUrl}home/watch/${cleanedTitle}`;
                     } else {
                         console.error('Invalid anime data received');
                     }

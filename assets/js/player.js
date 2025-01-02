@@ -26,6 +26,15 @@ $('.playbutton').on('click', function () {
 
 // Initialize the first load of the player
 function initializeFirstLoad() {
+    const followedByUser = localStorage.getItem('followedByUser');
+    
+    if (followedByUser) {
+        const followed = JSON.parse(followedByUser);
+        if (followed.includes(animeId)) {
+            $('#followbtn').html('<i class="glyphicon glyphicon-bell"></i> Followed');
+        } 
+    }
+
     const episodeIndex = lastTime[animeId] || 0;
     $('#eptitleplace').text(`EP ${episodeIndex + 1}`);
     getEpisodes(episodeIndex, animeId);
@@ -69,10 +78,10 @@ function checkPlayer(url) {
         typeStream.text('Malupet Stream');
 
 
-        const video = $('<video>', { controls: true, playsinline: true })
+        const video = $('<video>', { id: 'videoPlayer', controls: true, playsinline: true })
             .append($('<source>', { src: url, type: 'video/mp4' }));
         container.append($('<div>', { id: 'iframeplayer' }).append(video));
-        new Plyr(video[0]);
+        new Plyr('#videoPlayer');
     } else {
         if (url.includes('short')) {
             player.text('External Player (Ads)');
@@ -101,6 +110,54 @@ function saveLastWatched(index, id) {
     const lastTime = JSON.parse(localStorage.getItem('lastTime')) || {};
     lastTime[id] = index;
     localStorage.setItem('lastTime', JSON.stringify(lastTime));
+}
+
+let reloadCanClick = true;
+let downloadCanClick = true;
+let reloadCooldownTimer, downloadCooldownTimer;
+
+// Function to handle notifications with cooldown
+function popNotif(buttonType, time, message) {
+    const notif = $('#notifiaction');
+    const waitingTime = 8000;
+
+    notifPop = (message) => {
+        notif.text(message);
+        notif.fadeIn(500);
+        setTimeout(() => {
+            notif.fadeOut(500);
+        }, time);
+    };
+
+    if (buttonType === 'reload') {
+        if (reloadCanClick) {
+            notifPop(message);
+            reloadCanClick = false;
+
+            reloadCooldownTimer = setInterval(() => {
+                reloadCanClick = true;
+                clearInterval(reloadCooldownTimer);
+            }, waitingTime);
+        } else {
+            notifPop("Don't spam click!");
+        }
+        return reloadCanClick;
+    }
+
+    if (buttonType === 'download') {
+        if (downloadCanClick) {
+            notifPop(message);
+            downloadCanClick = false;
+
+            downloadCooldownTimer = setInterval(() => {
+                downloadCanClick = true;
+                clearInterval(downloadCooldownTimer);
+            }, waitingTime);
+        } else {
+            notifPop("Don't spam click!");
+        }
+        return downloadCanClick;
+    }
 }
 
 // Handle back navigation
@@ -172,6 +229,74 @@ $('#lighttoggleBtn').click(() => {
         })
     }
 });
+
+
+// Event listener for download button
+$('#downloadBtn').click(function () {
+    const isIframe = $('#iframeplayer').is('iframe');
+    const streamType = $('#streamtype').text().trim();
+    const videoUrl = $('#videoPlayer').find('source').attr('src');
+    const time = 1500;
+
+    if (downloadCanClick) {
+        if (isIframe && ['Gdrive', 'Terabox'].some(type => streamType.includes(type))) {
+            setTimeout(() => {
+                window.open($('#iframeplayer').attr('src'), '_blank');
+            }, time);
+        } else {
+            setTimeout(() => {
+                window.open(videoUrl, '_blank');
+            }, time);
+        }
+    }
+
+    popNotif('download', time, 'Opening download link...');
+});
+
+// Event listener for reload button
+$('#reloadbtn').click(function () {
+    const isIframe = $('#iframeplayer').is('iframe');
+    const message = 'Reloading...';
+    const time = 900;
+
+    if (isIframe && reloadCanClick) {
+        popNotif('reload', time, message);
+        const currentSrc = $('#iframeplayer').attr('src');
+        $('#iframeplayer').attr('src', '');
+        setTimeout(() => {
+            $('#iframeplayer').attr('src', currentSrc);
+        }, time);
+    } else if (!isIframe && reloadCanClick) {
+        popNotif('reload', time, message);
+        const currentSrc = $('#videoPlayer').find('source').attr('src');
+        $('#videoPlayer').find('source').attr('src', '');
+        setTimeout(() => {
+            $('#videoPlayer').find('source').attr('src', currentSrc);
+        }, time);
+    } else {
+        popNotif('reload', time, message);
+    }
+});
+
+// Event listener for follow button
+$('#followbtn').click(function () {
+    let followedByUser = localStorage.getItem('followedByUser');
+    let followed = followedByUser ? JSON.parse(followedByUser) : [];
+    let index = followed.indexOf(animeId);
+
+    if (index === -1) {
+        followed.push(animeId);
+        $(this).html('<i class="glyphicon glyphicon-bell"></i> Followed');
+        console.log('Anime added to followed list');
+    } else {
+        followed.splice(index, 1);
+        $(this).html('<i class="glyphicon glyphicon-bell"></i> Follow');
+        console.log('Anime removed from followed list');
+    }
+
+    localStorage.setItem('followedByUser', JSON.stringify(followed));
+});
+
 
 handleBackNavigation();
 initializeFirstLoad();

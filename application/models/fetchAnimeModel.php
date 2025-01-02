@@ -42,6 +42,7 @@ class fetchAnimeModel extends CI_Model {
     }
 
     private function cleanTitle($title) {
+        $title = str_replace([':', '+'], '', $title);
         $title = preg_replace('/[^\p{L}\p{N}\s\-]/u', '', $title);
         $title = strtolower($title);
         $title = preg_replace('/[\s-]+/', '-', $title);
@@ -56,8 +57,10 @@ class fetchAnimeModel extends CI_Model {
         $query = $this->db->get();
         $all_anime = $query->result();
         
+        $cleaned_url = $this->cleanTitle($url_title);
+        
         foreach($all_anime as $anime) {
-            if($this->cleanTitle($anime->title) === $url_title) {
+            if($this->cleanTitle($anime->title) === $cleaned_url) {
                 return $anime;
             }
         }
