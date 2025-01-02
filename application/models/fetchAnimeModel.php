@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class fetchAnimeModel extends CI_Model {
+class FetchAnimeModel extends CI_Model {
     private function hasMoreAnime($offset, $limit, $conditions = array()) {
         foreach ($conditions as $key => $value) {
             $this->db->where($key, $value);

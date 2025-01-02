@@ -9,13 +9,6 @@ class Admin extends CI_Controller {
         $this->load->view('admin/template/footer');
     }
 
-    public function login() {
-        $data['title'] = 'Admin Login';
-        $this->load->view('admin/template/head', $data);
-        $this->load->view('admin/loginView');
-        $this->load->view('admin/template/footer');
-    }
-
     public function uploadAnimeData() {
         // Get JSON data from POST request
         $jsonData = $this->input->post('animeData');

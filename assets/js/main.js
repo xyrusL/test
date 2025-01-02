@@ -79,7 +79,7 @@ function showFollowed() {
 
     followedIds.forEach(id => {
         $.ajax({
-            url: `${baseUrl}/Home/getAnimeById`,
+            url: `${baseUrl}/home/getAnimeById`,
             type: 'POST',
             data: { id },
             success: function(response) {
@@ -114,7 +114,7 @@ function fetchingAnimeData(type) {
     $('#loadingtext').show();
 
     $.ajax({
-        url: `${baseUrl}/Home/${type}`,
+        url: `${baseUrl}/home/${type}`,
         type: 'POST',
         success: function(response) {
             try {
@@ -146,7 +146,7 @@ function loadPagination() {
     $loadMoreBtn.html('<i class="glyphicon glyphicon-refresh glyphicon-spin"></i> Load More...');
     
     $.ajax({
-        url: `${baseUrl}/Home/loadMore`,
+        url: `${baseUrl}/home/loadMore`,
         type: 'POST',
         data: { offSet, currentType },
         success: function(response) {
