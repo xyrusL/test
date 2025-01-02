@@ -6,19 +6,15 @@ A CodeIgniter 3 based website for streaming anime series, featuring both dubbed 
 
 - Browse all anime series
 - Filter anime by:
-  - Dubbed anime
-  - Subbed anime
-  - Anime movies
-- Load more functionality for pagination
-- Modern and responsive interface
-
-## Tech Stack
-
-- CodeIgniter 3
-- PHP
-- MySQL
-- JavaScript/jQuery
-- Bootstrap (for styling)
+  - Dubbed/Subbed
+  - Genre
+  - Season
+  - Year
+  - Status
+- Admin dashboard for content management
+- Dark mode interface
+- Bootstrap responsive design
+- JSON-based content updates
 
 ## Project Structure
 
