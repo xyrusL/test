@@ -63,7 +63,7 @@ class Admin extends CI_Controller {
         
         if (in_array($content, $valid_contents)) {
             if ($content === 'dashboard') {
-                $this->load->view('admin/content/dashboard_display');
+                $this->load->view('admin/content/monitoring');
             } else {
                 $this->load->view('admin/content/' . $content);
             }
