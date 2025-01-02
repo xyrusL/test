@@ -191,19 +191,19 @@
                 <span class="altsourcenotif">External Player</span>
             </div>
             <div id="toprightplayer">
-                <i onclick="switchToLive();" class="proxybtn glyphicon glyphicon glyphicon-transfer" style="color: white;">
+                <i id="switchToLiveBtn" class="proxybtn glyphicon glyphicon glyphicon-transfer" style="color: white;">
                     <span class="tooltiptext">Switch</span>
                 </i>
-                <i onclick="lighttoggle();" class="lightbtn glyphicon glyphicon-sunglasses">
+                <i id="lighttoggleBtn" class="lightbtn glyphicon glyphicon-sunglasses">
                     <span class="tooltiptext">Lights</span>
                 </i>
-                <i onclick="download();" class="dlbutton glyphicon glyphicon-download-alt">
+                <i id="downloadBtn" class="dlbutton glyphicon glyphicon-download-alt">
                     <span class="tooltiptext">Download</span>
                 </i>
-                <i onclick="toggleautoplay();" class="autoplaybutton glyphicon glyphicon-flash">
+                <i id="toggleautoplayBtn" class="autoplaybutton glyphicon glyphicon-flash">
                     <span class="tooltiptext">Autoplay</span>
                 </i>
-                <i onclick="playnext()" id="nextbtn" class="glyphicon glyphicon-forward" style="cursor: pointer;">
+                <i id="nextbtn" class="glyphicon glyphicon-forward" style="cursor: pointer;">
                     <span class="tooltiptext">Next ep</span>
                 </i>
             </div>
