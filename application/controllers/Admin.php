@@ -2,6 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Admin extends CI_Controller {
+    public function dashboard() {
+        $data['title'] = 'Admin Dashboard';
+        $this->load->view('admin/template/head', $data);
+        $this->load->view('admin/dashboardView');
+        $this->load->view('admin/template/footer');
+    }
+
     public function upload() {
         $data['title'] = 'Upload Anime';
         $this->load->view('admin/template/head', $data);

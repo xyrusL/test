@@ -2,15 +2,20 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Auth extends CI_Controller {
-    public function __construct() {
-        parent::__construct();
-        $this->load->library('form_validation');
-        $this->load->helper('security');  // Changed from library to helper
-    }
-
     public function login() {
         $this->load->view('admin/template/head');
         $this->load->view('admin/loginView');
+        $this->load->view('admin/template/footer');
+    }
+
+    public function dashboard() {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth/login');
+            return;
+        }
+        
+        $this->load->view('admin/template/head');
+        $this->load->view('admin/dashboardView');
         $this->load->view('admin/template/footer');
     }
 
