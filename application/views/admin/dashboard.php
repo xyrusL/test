@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="<?php echo base_url('assets/css/dashboard.css'); ?>">
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        const baseUrl = '<?php echo base_url(); ?>';
+    </script>
     <script defer src="<?php echo base_url('assets/js/dashboard.js'); ?>"></script>
 </head>
 
@@ -17,18 +20,18 @@
         <div class="sidebar">
             <div class="logo">Admin Panel</div>
             <div class="menu">
-                <a href="#"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="#" class="load-content" data-content="dashboard"><i class="fas fa-home"></i> Dashboard</a>
                 <div class="submenu">
                     <a href="#" class="submenu-trigger"><i class="fas fa-newspaper"></i> Content <i class="fas fa-chevron-down"></i></a>
                     <div class="submenu-content">
-                        <a href="#"><i class="fas fa-star"></i> Featured Post</a>
-                        <a href="#"><i class="fas fa-tv"></i> Anime Series</a>
+                        <a href="#" class="load-content" data-content="featured_post"><i class="fas fa-star"></i> Featured Post</a>
+                        <a href="#" class="load-content" data-content="anime_post"><i class="fas fa-tv"></i> Anime Series</a>
                     </div>
                 </div>
-                <a href="#"><i class="fas fa-users"></i> Users</a>
-                <a href="#"><i class="fas fa-cog"></i> Settings</a>
-                <a href="#"><i class="fas fa-chart-bar"></i> Reports</a>
-                <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                <a href="#" class="load-content" data-content="users"><i class="fas fa-users"></i> Users</a>
+                <a href="#" class="load-content" data-content="settings"><i class="fas fa-cog"></i> Settings</a>
+                <a href="#" class="load-content" data-content="reports"><i class="fas fa-chart-bar"></i> Reports</a>
+                <a href="#" class="load-content" data-content="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </div>
 
@@ -37,7 +40,7 @@
                 <h2>Dashboard Overview</h2>
             </div>
 
-            <div class="content">
+            <div class="content" id="mainContentArea">
                 <div class="dashboard-cards">
                     <div class="card">
                         <h3>Total Users</h3>

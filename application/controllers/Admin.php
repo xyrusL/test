@@ -56,4 +56,19 @@ class Admin extends CI_Controller {
         // Return response as JSON
         echo json_encode($response);
     }
+
+    public function load_content() {
+        $content = $this->input->get('content');
+        $valid_contents = ['dashboard', 'featured_post', 'anime_post', 'users', 'settings', 'reports'];
+        
+        if (in_array($content, $valid_contents)) {
+            if ($content === 'dashboard') {
+                $this->load->view('admin/dashboard');
+            } else {
+                $this->load->view('admin/content/' . $content);
+            }
+        } else {
+            show_404();
+        }
+    }
 }
