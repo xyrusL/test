@@ -98,10 +98,11 @@ function checkPlayer(url) {
         `);
     }
 
-    downloadEp(isDownloadable);
+    downloadEp(isDownloadable, isDownloadable ? url : null);
 }
 
-function downloadEp(isDownloadable) {
+// Check if the episode is downloadable
+function downloadEp(isDownloadable, url) {
     if (!isDownloadable) {
         $('#downloadBtn').css({
             'color': 'gray',
@@ -114,6 +115,7 @@ function downloadEp(isDownloadable) {
             'cursor': '',
             'pointer-events': ''
         });
+        window.open(url, '_blank');
     }
 }
 
