@@ -211,6 +211,8 @@ if (typeof window.AnimeManager === 'undefined') {
             if (!anime) return;
 
             const editForm = document.getElementById('editForm');
+            if (!editForm) return;
+
             // Populate form fields
             Object.keys(anime).forEach(key => {
                 const input = editForm.querySelector(`[name="${key}"]`);
@@ -226,44 +228,34 @@ if (typeof window.AnimeManager === 'undefined') {
             // Store current index for saving
             editForm.dataset.index = index;
             
-            // Adjust modal size based on screen height
-            const modalDialog = document.querySelector('#editModal .modal-dialog');
-            const windowHeight = window.innerHeight;
-            const modalHeight = windowHeight * 0.9; // 90% of viewport height
-            
-            modalDialog.style.maxWidth = '900px';
-            modalDialog.style.margin = '1.75rem auto';
-            
-            const modalContent = document.querySelector('#editModal .modal-content');
-            modalContent.style.maxHeight = `${modalHeight}px`;
-            
-            // Adjust body height to accommodate form
-            const modalHeader = document.querySelector('#editModal .modal-header');
-            const modalFooter = document.querySelector('#editModal .modal-footer');
-            const headerHeight = modalHeader.offsetHeight;
-            const footerHeight = modalFooter.offsetHeight;
-            const modalBody = document.querySelector('#editModal .modal-body');
-            modalBody.style.maxHeight = `${modalHeight - headerHeight - footerHeight - 40}px`; // 40px for padding
-            modalBody.style.overflowY = 'auto';
-            
             // Show modal
-            const modal = new bootstrap.Modal(document.getElementById('editModal'));
+            const editModal = document.getElementById('editModal');
+            if (!editModal) return;
+
+            // Add necessary styles to the modal
+            const style = document.createElement('style');
+            style.textContent = `
+                #editModal .modal-dialog {
+                    max-width: 900px;
+                    margin: 1.75rem auto;
+                }
+                #editModal .modal-content {
+                    max-height: 90vh;
+                }
+                #editModal .modal-body {
+                    max-height: calc(90vh - 120px); /* 120px accounts for header and footer */
+                    overflow-y: auto;
+                }
+            `;
+            document.head.appendChild(style);
+
+            const modal = new bootstrap.Modal(editModal);
             modal.show();
-            
-            // Add resize listener
-            const handleResize = () => {
-                const newWindowHeight = window.innerHeight;
-                const newModalHeight = newWindowHeight * 0.9;
-                modalContent.style.maxHeight = `${newModalHeight}px`;
-                modalBody.style.maxHeight = `${newModalHeight - headerHeight - footerHeight - 40}px`;
-            };
-            
-            window.addEventListener('resize', handleResize);
-            
-            // Clean up resize listener when modal is hidden
-            document.getElementById('editModal').addEventListener('hidden.bs.modal', function () {
-                window.removeEventListener('resize', handleResize);
-            });
+
+            // Clean up style when modal is hidden
+            editModal.addEventListener('hidden.bs.modal', () => {
+                style.remove();
+            }, { once: true });
         },
 
         saveEdit: function(form) {
