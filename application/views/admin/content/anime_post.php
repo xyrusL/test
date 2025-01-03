@@ -39,8 +39,11 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="mt-3">
+                        <div class="mt-3 d-flex justify-content-between align-items-center">
                             <small class="text-light">Showing <span id="displayCount">0</span> of <span id="totalCount">0</span> items</small>
+                            <button id="uploadBtn" class="btn btn-success" disabled onclick="AnimeManager.uploadData()">
+                                <i class="fas fa-upload"></i> Upload Data
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -132,6 +135,31 @@
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Progress Modal -->
+<div class="modal fade" id="uploadProgressModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title">Uploading Anime Data</h5>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div class="progress">
+                    <div id="uploadProgress" class="progress-bar progress-bar-striped progress-bar-animated" 
+                         role="progressbar" style="width: 0%">0%</div>
+                </div>
+                <div class="mt-2 text-center">
+                    <span id="uploadStatus">Preparing to upload...</span>
+                </div>
             </div>
         </div>
     </div>

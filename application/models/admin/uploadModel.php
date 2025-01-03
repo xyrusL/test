@@ -2,12 +2,17 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class UploadModel extends CI_Model {
+    protected $table = 'animeseries';
+
     public function insertAnimeData($data) {
-        foreach ($data as $key => $value) {
-            if (is_array($value)) {
-                $data[$key] = json_encode($value);
-            }
+        if (!is_array($data)) {
+            return false;
         }
-        return $this->db->insert('animeseries', $data);
+
+        if (empty($data['title'])) {
+            return false;
+        }
+
+        return $this->db->insert($this->table, $data);
     }
 }

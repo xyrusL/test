@@ -66,34 +66,44 @@ const AnimeManager = {
     // Data Validation
     // =========================================
     validateAndPreviewJson: function(data) {
-        const requiredKeys = [
-            'Title', 'Poster', 'Total Episodes', 'Category', 'Genres',
+        // Only Title and Poster are required
+        const requiredKeys = ['Title', 'Poster'];
+        const optionalKeys = ['Total Episodes', 'Category', 'Genres',
             'MAL Score', 'Status', 'Language', 'Season', 'Year', 'urls'
         ];
         
         const animeList = Array.isArray(data) ? data : [data];
         
-        if (!this.validateAnimeData(animeList, requiredKeys)) return;
+        if (!this.validateAnimeData(animeList, requiredKeys, optionalKeys)) return;
 
         this.data = animeList;
         this.displayPreview(animeList);
+        document.getElementById('uploadBtn').disabled = false;
     },
 
-    validateAnimeData: function(animeList, requiredKeys) {
+    validateAnimeData: function(animeList, requiredKeys, optionalKeys) {
         for (const anime of animeList) {
             // Check required fields
             const missingKeys = requiredKeys.filter(key => !(key in anime));
             if (missingKeys.length > 0) {
-                this.showErrorModal(`Missing required keys: ${missingKeys.join(', ')}`);
+                this.showErrorModal(`Missing critical fields: ${missingKeys.join(', ')}`);
                 this.resetUpload();
                 return false;
             }
-            
-            // Validate array fields
-            if (!Array.isArray(anime.Genres) || !Array.isArray(anime.urls)) {
-                this.showErrorModal('Genres and urls must be arrays');
-                this.resetUpload();
-                return false;
+
+            // Ensure all fields exist (set to null if missing)
+            optionalKeys.forEach(key => {
+                if (!(key in anime)) {
+                    anime[key] = null;
+                }
+            });
+
+            // Initialize arrays if missing
+            if (!Array.isArray(anime.Genres)) {
+                anime.Genres = [];
+            }
+            if (!Array.isArray(anime.urls)) {
+                anime.urls = [];
             }
         }
         return true;
@@ -291,6 +301,7 @@ const AnimeManager = {
         if (previewTable) previewTable.innerHTML = '';
         if (displayCountEl) displayCountEl.textContent = '0';
         if (totalCountEl) totalCountEl.textContent = '0';
+        document.getElementById('uploadBtn').disabled = true;
     },
 
     closeEditModal: function() {
@@ -348,6 +359,63 @@ const AnimeManager = {
         document.body.insertAdjacentHTML('beforeend', modalHtml);
         const modal = new bootstrap.Modal(document.getElementById('errorModal'));
         modal.show();
+    },
+
+    // =========================================
+    // Upload Operations
+    // =========================================
+    uploadData: async function() {
+        if (!this.data.length) {
+            this.showErrorModal('No data to upload');
+            return;
+        }
+
+        const modal = new bootstrap.Modal(document.getElementById('uploadProgressModal'));
+        modal.show();
+
+        const progressBar = document.getElementById('uploadProgress');
+        const statusText = document.getElementById('uploadStatus');
+        let completed = 0;
+
+        for (const anime of this.data) {
+            try {
+                statusText.textContent = `Uploading: ${anime.Title}`;
+                
+                const response = await fetch(`${baseUrl}admin/uploadAnimeData`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(anime)
+                });
+
+                const result = await response.json();
+                if (!response.ok || result.status !== 'success') {
+                    throw new Error(result.message || 'Upload failed');
+                }
+
+                completed++;
+                const progress = (completed / this.data.length) * 100;
+                progressBar.style.width = `${progress}%`;
+                progressBar.textContent = `${Math.round(progress)}%`;
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                this.showErrorModal(`Failed to upload ${anime.Title}: ${error.message}`);
+                modal.hide();
+                return;
+            }
+        }
+
+        statusText.textContent = 'Upload completed successfully!';
+        progressBar.classList.remove('progress-bar-animated');
+        
+        setTimeout(() => {
+            modal.hide();
+            this.showSuccessToast('All anime data uploaded successfully!');
+            this.resetUpload();
+        }, 1500);
     }
 };
 
