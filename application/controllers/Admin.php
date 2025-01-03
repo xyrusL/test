@@ -63,7 +63,7 @@ class Admin extends CI_Controller {
 
     public function load_content() {
         $content = $this->input->get('content');
-        $valid_contents = ['dashboard', 'featured_post', 'anime_post', 'users', 'settings', 'reports'];
+        $valid_contents = ['dashboard', 'featured_post', 'anime_post', 'anime_data', 'users', 'settings', 'reports'];
         
         if (in_array($content, $valid_contents)) {
             if ($content === 'dashboard') {

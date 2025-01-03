@@ -1,4 +1,18 @@
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php/$1 [L]
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /test/
+
+    # Handle favicon.ico
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^favicon\.ico$ assets/images/favicon.ico [L]
+
+    # Existing CodeIgniter rules
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+    # Prevent browser from sending referrer headers
+    Header set Referrer-Policy "no-referrer-when-downgrade"
+</IfModule>

@@ -226,8 +226,44 @@ if (typeof window.AnimeManager === 'undefined') {
             // Store current index for saving
             editForm.dataset.index = index;
             
+            // Adjust modal size based on screen height
+            const modalDialog = document.querySelector('#editModal .modal-dialog');
+            const windowHeight = window.innerHeight;
+            const modalHeight = windowHeight * 0.9; // 90% of viewport height
+            
+            modalDialog.style.maxWidth = '900px';
+            modalDialog.style.margin = '1.75rem auto';
+            
+            const modalContent = document.querySelector('#editModal .modal-content');
+            modalContent.style.maxHeight = `${modalHeight}px`;
+            
+            // Adjust body height to accommodate form
+            const modalHeader = document.querySelector('#editModal .modal-header');
+            const modalFooter = document.querySelector('#editModal .modal-footer');
+            const headerHeight = modalHeader.offsetHeight;
+            const footerHeight = modalFooter.offsetHeight;
+            const modalBody = document.querySelector('#editModal .modal-body');
+            modalBody.style.maxHeight = `${modalHeight - headerHeight - footerHeight - 40}px`; // 40px for padding
+            modalBody.style.overflowY = 'auto';
+            
+            // Show modal
             const modal = new bootstrap.Modal(document.getElementById('editModal'));
             modal.show();
+            
+            // Add resize listener
+            const handleResize = () => {
+                const newWindowHeight = window.innerHeight;
+                const newModalHeight = newWindowHeight * 0.9;
+                modalContent.style.maxHeight = `${newModalHeight}px`;
+                modalBody.style.maxHeight = `${newModalHeight - headerHeight - footerHeight - 40}px`;
+            };
+            
+            window.addEventListener('resize', handleResize);
+            
+            // Clean up resize listener when modal is hidden
+            document.getElementById('editModal').addEventListener('hidden.bs.modal', function () {
+                window.removeEventListener('resize', handleResize);
+            });
         },
 
         saveEdit: function(form) {

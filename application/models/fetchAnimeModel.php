@@ -116,4 +116,14 @@ class FetchAnimeModel extends CI_Model {
         $query = $this->db->get('animeseries');
         return $query->row();
     }
+
+    public function updateAnime($id, $data) {
+        try {
+            $this->db->where('id', $id);
+            return $this->db->update('animeseries', $data);
+        } catch (Exception $e) {
+            log_message('error', 'Error updating anime: ' . $e->getMessage());
+            return false;
+        }
+    }
 }

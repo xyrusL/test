@@ -28,6 +28,7 @@
                     <div class="submenu-content">
                         <a href="#" class="load-content" data-content="featured_post"><i class="fas fa-star"></i> Featured Post</a>
                         <a href="#" class="load-content" data-content="anime_post"><i class="fas fa-tv"></i> Anime Series</a>
+                        <a href="#" class="load-content" data-content="anime_data"><i class="fas fa-book"></i> Records </a>
                     </div>
                 </div>
                 <a href="#" class="load-content" data-content="users"><i class="fas fa-users"></i> Users</a>
