@@ -44,7 +44,7 @@ function initializeFirstLoad() {
 function getEpisodes(episodeIndex, animeId) {
     $('#loadcontainer2').show();
     $.ajax({
-        url: `${baseUrl}home/getEpisodeUrl`,
+        url: `${baseUrl}api/getEpisodeUrl`,
         method: 'POST',
         data: { anime_id: animeId, episode_index: episodeIndex },
         success: function (response) {

@@ -81,7 +81,7 @@ function showFollowed() {
 
     followedIds.forEach(id => {
         $.ajax({
-            url: `${baseUrl}/home/getAnimeById`,
+            url: `${baseUrl}/api/getAnimeById`,
             type: 'POST',
             data: { id },
             success: function(response) {
@@ -116,7 +116,7 @@ function fetchingAnimeData(type) {
     $('#loadingtext').show();
 
     $.ajax({
-        url: `${baseUrl}/home/${type}`,
+        url: `${baseUrl}/api/${type}`,
         type: 'POST',
         success: function(response) {
             try {
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (searchQuery.length >= 2) {
                 $.ajax({
-                    url: `${baseUrl}Home/searchAnime`,
+                    url: `${baseUrl}api/searchAnime`,
                     type: 'POST',
                     data: { query: searchQuery },
                     success: function(response) {
@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('click', '.topmenubtn', function(e) {
         e.preventDefault();
         $.ajax({
-            url: `${baseUrl}Home/getRandomAnime`,
+            url: `${baseUrl}api/getRandomAnime`,
             type: 'GET',
             success: function(response) {
                 try {
