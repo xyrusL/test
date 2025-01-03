@@ -164,3 +164,12 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Initialize AnimeManager
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof AnimeManager !== 'undefined') {
+            AnimeManager.init();
+        }
+    });
+</script>
