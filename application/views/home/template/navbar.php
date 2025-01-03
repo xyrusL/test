@@ -14,8 +14,8 @@
             <a href="<?php echo base_url(); ?>"><img class="webtitle" alt="AnimixPlay" src="<?php echo base_url('assets/logo.png'); ?>"></a>
             <input class="form-control searchbar" placeholder="Search" autocomplete="off" id="q" type="search">
             <button id="searchbutton"><i class="glyphicon glyphicon-search"></i></button>
-            <a class="topmenubtn" title="Random anime" href=""><i class="glyphicon glyphicon-random"></i> Random</a>
-            <a class="topmenubtn" title="A-Z List" href="">A-Z List</a>
+            <a class="topmenubtn" title="Random anime" href="<?php echo base_url('random'); ?>"><i class="glyphicon glyphicon-random"></i> Random</a>
+            <a class="topmenubtn" title="A-Z List" href="<?php echo base_url('list'); ?>">A-Z List</a>
         </div>
         <span id="usernametop"></span>
         <button id="menumobilebtn"><i class="glyphicon glyphicon-menu-hamburger"></i></button>

@@ -39,9 +39,11 @@ function appendLayout(anime) {
         .trim()
         .replace(/^-+|-+$/g, '');
 
+    const watchUrl = baseUrl + 'watch/' + formattedTitle;
+
     const template = `
         <li>
-            <a href="${baseUrl}watch/${formattedTitle}" data-id="${anime.id}" title="${anime.title}">
+            <a href="${watchUrl}" data-id="${anime.id}" title="${anime.title}">
                 <div class="searchimg">
                     <img 
                         alt="${anime.title} - Free Online" 
@@ -205,8 +207,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             const data = JSON.parse(response);
                             if (data?.length) {
                                 data.forEach(anime => {
+                                    const watchUrl = baseUrl + 'watch/' + cleanTitle(anime.title);
                                     $('.quickresult').append(`
-                                        <a href="${baseUrl}watch/${cleanTitle(anime.title)}" title="${anime.title}">
+                                        <a href="${watchUrl}" title="${anime.title}">
                                             <li>
                                                 <div class="searchimg">
                                                     <img class="resultimg2" src="${anime.poster}" alt="${anime.title}">
@@ -246,14 +249,15 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('click', '.topmenubtn', function(e) {
         e.preventDefault();
         $.ajax({
-            url: `${baseUrl}home/getRandomAnime`,
+            url: `${baseUrl}Home/getRandomAnime`,
             type: 'GET',
             success: function(response) {
                 try {
                     const anime = JSON.parse(response);
                     if (anime && anime.title) {
                         const cleanedTitle = cleanTitle(anime.title);
-                        window.location.href = `${baseUrl}home/watch/${cleanedTitle}`;
+                        const watchUrl = baseUrl + 'watch/' + cleanedTitle;
+                        window.location.href = watchUrl;
                     } else {
                         console.error('Invalid anime data received');
                     }

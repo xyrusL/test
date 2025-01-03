@@ -15,6 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
     <script>
         let baseUrl = '<?php echo base_url(); ?>';
+        let siteUrl = '<?php echo site_url(); ?>';
     </script>
 	<script src="<?php echo base_url('assets/js/main.js'); ?>"></script>
     <script src="<?php echo base_url('assets/js/player.js'); ?>" defer></script>

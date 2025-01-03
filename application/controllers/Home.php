@@ -137,4 +137,20 @@ class Home extends CI_Controller {
         $this->load->view('home/animeseries', $data);
     }
 
+    public function random() {
+        $this->load->model('fetchAnimeModel');
+        $anime = $this->fetchAnimeModel->getRandomAnime();
+        if ($anime) {
+            redirect(base_url('watch/' . url_title($anime->title, 'dash', TRUE)));
+        } else {
+            redirect(base_url());
+        }
+    }
+
+    public function list() {
+        $this->load->model('fetchAnimeModel');
+        $data['animeSeries'] = $this->fetchAnimeModel->getAllAnime();
+        $this->load->view('home/list', $data);
+    }
+
 }

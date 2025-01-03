@@ -79,27 +79,20 @@
 					<ul class="searchresult">
 						<?php foreach (array_slice($animeSeries, 0, 24) as $anime): ?>
 							<li>
-								<?php 
-								// Remove special characters
-								$clean_title = preg_replace('/[♥♡☆→()]/u', '', $anime->title);						
-								$url_title = strtolower($clean_title);
-								$url_title = str_replace([':', '+', '!', '?', '.', ' '], '-', $url_title);
-								$url_title = preg_replace('/-+/', '-', $url_title);
-								$url_title = trim($url_title, '-');
-								?>
-								<a href="<?= base_url('watch/' . $url_title) ?>" data-id="<?= $anime->id ?>" class="anime-link" title="<?= $anime->title ?>">
+								<a href="<?php echo base_url('watch/' . url_title($anime->title, 'dash', TRUE)); ?>" data-id="<?php echo $anime->id; ?>" title="<?php echo $anime->title; ?>">
 									<div class="searchimg">
 										<img 
-											alt="<?= $anime->title ?> - Free Online" 
+											alt="<?php echo $anime->title; ?> - Free Online" 
 											class="resultimg" 
-											src="<?= $anime->poster ?>" 
+											src="<?php echo $anime->poster; ?>" 
+											loading="lazy"
 										/>
-										<div class="timetext"><?= $anime->date ?></div>
-										<div class="rating"><i class="glyphicon glyphicon-star"></i> <?= $anime->mal_score ?></div>
+										<div class="timetext"><?php echo $anime->date; ?></div>
+										<div class="rating"><i class="glyphicon glyphicon-star"></i> <?php echo $anime->mal_score; ?></div>
 									</div>
 									<div class="details">
-										<p class="name"><?= $anime->title ?></p>
-										<p class="infotext">EP <?= $anime->total_episodes ?><?= $anime->status === 'Finished Airing' ? '' : '/?'?></p>
+										<p class="name"><?php echo $anime->title; ?></p>
+										<p class="infotext">EP <?php echo $anime->total_episodes; ?><?php echo $anime->status === 'Finished Airing' ? '' : '/?'?></p>
 									</div>
 								</a>
 							</li>
