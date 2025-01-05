@@ -3,9 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Auth extends CI_Controller {
     public function login() {
-        $this->load->view('admin/template/head');
         $this->load->view('admin/login');
-        $this->load->view('admin/template/footer');
     }
 
     public function dashboard() {

@@ -1,49 +1,64 @@
-<style>
-        body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #e1e1e1;
-        }
-        .card {
-            background: rgba(26, 26, 46, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        }
-        .card-body {
-            color: #e1e1e1;
-        }
-        .form-control {
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #e1e1e1;
-        }
-        .form-control:focus {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1);
-        }
-        .form-control::placeholder {
-            color: #a0a0a0;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #0056b3 0%, #007bff 100%);
-            border: none;
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #004494 0%, #0056b3 100%);
-            transform: translateY(-1px);
-        }
-        .form-check-label {
-            color: #e1e1e1;
-        }
-        .alert-danger {
-            background-color: rgba(220, 53, 69, 0.1);
-            border-color: rgba(220, 53, 69, 0.2);
-            color: #ff6b6b;
-        }
-    </style>
+<head>
+    <title>Admin Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 </head>
+<style>
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        color: #e1e1e1;
+    }
+
+    .card {
+        background: rgba(26, 26, 46, 0.9);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .card-body {
+        color: #e1e1e1;
+    }
+
+    .form-control {
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #e1e1e1;
+    }
+
+    .form-control:focus {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1);
+    }
+
+    .form-control::placeholder {
+        color: #a0a0a0;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #0056b3 0%, #007bff 100%);
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #004494 0%, #0056b3 100%);
+        transform: translateY(-1px);
+    }
+
+    .form-check-label {
+        color: #e1e1e1;
+    }
+
+    .alert-danger {
+        background-color: rgba(220, 53, 69, 0.1);
+        border-color: rgba(220, 53, 69, 0.2);
+        color: #ff6b6b;
+    }
+</style>
+</head>
+<body>
 <div class="container">
     <div class="row justify-content-center align-items-center min-vh-100">
         <div class="col-md-4">
@@ -64,7 +79,7 @@
                             <button type="submit" class="btn btn-primary">Sign In</button>
                         </div>
                     </form>
-                    <?php if($this->session->flashdata('error')): ?>
+                    <?php if ($this->session->flashdata('error')): ?>
                         <div class="alert alert-danger mt-3">
                             <?php echo $this->session->flashdata('error'); ?>
                         </div>
@@ -74,3 +89,5 @@
         </div>
     </div>
 </div>
+</body>
+</html>
