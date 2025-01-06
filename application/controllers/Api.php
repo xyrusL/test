@@ -6,6 +6,11 @@ class Api extends CI_Controller {
         parent::__construct();
         $this->load->model('fetchAnimeModel');
     }
+    
+    public function getAnimeData() {
+        $data = $this->fetchAnimeModel->getAnimeData();
+        echo json_encode($data);
+    }
 
     public function getAllAnime() {
         $query = $this->input->post('query');

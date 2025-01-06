@@ -6,6 +6,7 @@
     --text-color: rgba(255, 255, 255, 0.85);
     --text-muted: rgba(255, 255, 255, 0.6);
     --border-color: rgba(255, 255, 255, 0.1);
+    --card-color-bg: #343a40;
 }
 body {
     background: linear-gradient(135deg, #1a1c23 0%, #242731 100%);
@@ -112,3 +113,99 @@ hr {
 .text-danger {
     color: #ff4d4d !important;
 }
+
+/* Table */
+
+.table-custom {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #2a2d3a; /* Darker background for the table */
+    color: var(--text-color);
+}
+
+.table-custom thead {
+    background-color: #1a1c23;
+}
+
+.table-custom th, .table-custom td {
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.table-custom tbody tr {
+    background-color: #2a2d3a;
+    transition: background-color 0.3s;
+}
+
+.table-custom tbody tr:hover {
+    background-color: #242731;
+}
+
+.table-custom th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.table-custom .btn {
+    margin-right: 5px;
+}
+
+.table-custom td:last-child {
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Card */
+.card {
+    background-color: var(--card-color-bg);
+}
+
+.form-control {
+    color: #333435;
+}
+
+/* Modal  */
+
+#animeModalContent, .modal-content {
+    background-color: var(--card-color-bg) !important;
+}
+
+/* Pagination Controls Redesign */
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding-left: 0;
+    list-style: none;
+    margin-top: 20px; /* Adjust the value as needed */
+}
+
+.page-item {
+    margin: 0 5px;
+}
+
+.page-link {
+    color: var(--text-color);
+    background-color: var(--card-color-bg);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.page-link:hover {
+    background-color: var(--sidebar-hover);
+    color: #fff;
+}
+
+.page-item.active .page-link {
+    background-color: #fff;
+    color: var(--text-color);
+    border-color: #fff;
+}
+
+
+

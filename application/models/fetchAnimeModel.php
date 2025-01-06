@@ -2,12 +2,10 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class FetchAnimeModel extends CI_Model {
-    private function hasMoreAnime($offset, $limit, $conditions = array()) {
-        foreach ($conditions as $key => $value) {
-            $this->db->where($key, $value);
-        }
-        $this->db->limit(1, $offset + $limit);
-        return $this->db->get('animeseries')->num_rows() > 0;
+    public function getAnimeDAta() {
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get('animeseries');
+        return $query->result();
     }
     
     public function getAllAnime($offset = 0, $limit = 24) {

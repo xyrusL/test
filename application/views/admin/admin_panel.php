@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
    
     <!--JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body class="bg-white">
@@ -68,6 +69,7 @@
         <main class="flex-grow-1 p-4">
             <div class="container-fluid">
                 <!-- Main content goes here -->
+                <?= $this->load->view('admin/menus/anime_post', [], TRUE) ?>
             </div>
         </main>
     </div>
