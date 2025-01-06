@@ -190,6 +190,48 @@
     </div>
 </div>
 
+<!-- Upload JSON Modal -->
+<div class="modal fade" id="uploadJsonModal" tabindex="-1" aria-labelledby="uploadJsonModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="uploadJsonModalContent">
+            <div class="modal-header" style="border-bottom: 1px solid var(--border-color);">
+                <h5 class="modal-title" id="uploadJsonModalLabel">Upload JSON</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="uploadJsonForm">
+                    <div class="mb-3">
+                        <label for="jsonFileInput" class="form-label">Select JSON File</label>
+                        <input type="file" class="form-control" id="jsonFileInput" accept=".json">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid var(--border-color);">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="uploadJsonBtn">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="notificationModalContent">
+            <div class="modal-header" style="border-bottom: 1px solid var(--border-color);">
+                <h5 class="modal-title" id="notificationModalLabel">Notification</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="notificationMessage"></p>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid var(--border-color);">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function() {
         let animeDataStore = [];
@@ -325,11 +367,13 @@
                 }).fail(function(error) {
                     console.log(error);
                 });
+            } else if ($(this).text().includes('Add New Anime')) {
+                $('#uploadJsonModal').modal('show');
             }
         });
 
         $('#saveChanges').click(function() {
-            alert('Changes saved successfully!');
+            showNotification('Changes saved successfully!');
             $('#editAnimeModal').modal('hide');
         });
 
@@ -355,6 +399,53 @@
                 });
             }
             $('#searchModal').modal('show');
+        }
+
+        // Handle JSON File Upload
+        $('#uploadJsonBtn').click(function() {
+            const requiredKeys = [
+                'Title', 'Poster', 'Total Episodes', 'Category',
+                'Genres', 'MAL Score', 'Status', 'Language', 'Season',
+                'Year', 'urls'
+            ];
+            const fileInput = document.getElementById('jsonFileInput');
+            if (!fileInput.files.length) {
+                showNotification('Please select a JSON file first.');
+                return;
+            }
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let jsonData = JSON.parse(e.target.result);
+                    if (!Array.isArray(jsonData)) {
+                        jsonData = [jsonData];
+                    }
+                    for (let i = 0; i < jsonData.length; i++) {
+                        const item = jsonData[i];
+                        const missingKeys = requiredKeys.filter(key => !(key in item));
+                        if (missingKeys.length > 0) {
+                            showNotification('Error missing key(s) in JSON object #' + (i + 1) + ': ' + missingKeys.join(', '));
+                            fileInput.value = '';
+                            console.error('Invalid JSON. Missing keys:', missingKeys);
+                            return;
+                        }
+                    }
+                    console.log('Verified');
+                    showNotification('JSON uploaded successfully!');
+                } catch (error) {
+                    console.error(error);
+                    showNotification('Invalid JSON file. Please check the file content.');
+                    fileInput.value = '';
+                }
+            };
+            reader.readAsText(file);
+            $('#uploadJsonModal').modal('hide');
+        });
+
+        function showNotification(message) {
+            $('#notificationMessage').text(message);
+            $('#notificationModal').modal('show');
         }
     });
 </script>
