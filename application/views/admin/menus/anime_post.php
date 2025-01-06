@@ -300,7 +300,7 @@
             });
         }
         initializePage();
-        
+
         function generateRow(anime) {
             return `
             <tr>
@@ -316,7 +316,7 @@
             </tr>
         `;
         }
-
+    
         function fetchAnimeById(id) {
             return $.ajax({
                 url: '<?= base_url('api/getAnimeById') ?>',
@@ -399,10 +399,11 @@
         $('#searchForm').submit(function(event) {
             event.preventDefault();
             const query = $('#searchInput').val().toLowerCase();
-            const filteredData = animeDataStore.filter(anime => 
-                anime.title.toLowerCase().includes(query) || 
+            const filteredData = animeDataStore.filter(anime =>
+                anime.title.toLowerCase().includes(query) ||
                 anime.status.toLowerCase().includes(query)
             );
+            // Render search results
             renderSearchResults(filteredData, query);
         });
 
@@ -420,6 +421,7 @@
         }
 
         $('#uploadJsonBtn').click(function() {
+            // Required keys for each anime entry
             const requiredKeys = [
                 'Title', 'Poster', 'Total Episodes', 'Category',
                 'Genres', 'MAL Score', 'Status', 'Language', 'Season',
@@ -438,7 +440,8 @@
                     if (!Array.isArray(jsonData)) {
                         jsonData = [jsonData];
                     }
-                    
+
+                    // Validate JSON data
                     for (let i = 0; i < jsonData.length; i++) {
                         const item = jsonData[i];
                         const missingKeys = requiredKeys.filter(key => !(key in item));
@@ -454,7 +457,8 @@
 
                     let completed = 0;
                     const totalEntries = jsonData.length;
-                    
+
+                    // Upload entries sequentially
                     function uploadSequentially(index) {
                         if (index >= totalEntries) {
                             hideLoading();
@@ -464,23 +468,25 @@
                         }
 
                         $.ajax({
-                            url: '<?= base_url('api/uploadNewAnime') ?>',
-                            type: 'POST',
-                            data: { animeData: JSON.stringify(jsonData[index]) },
-                            dataType: 'json'
-                        })
-                        .done(function(response) {
-                            if (response.success) {
-                                completed++;
-                            }
-                            updateLoadingProgress(index + 1, totalEntries);
-                            uploadSequentially(index + 1);
-                        })
-                        .fail(function(error) {
-                            console.error(`Error uploading entry ${index + 1}:`, error);
-                            updateLoadingProgress(index + 1, totalEntries);
-                            uploadSequentially(index + 1);
-                        });
+                                url: '<?= base_url('api/uploadNewAnime') ?>',
+                                type: 'POST',
+                                data: {
+                                    animeData: JSON.stringify(jsonData[index])
+                                },
+                                dataType: 'json'
+                            })
+                            .done(function(response) {
+                                if (response.success) {
+                                    completed++;
+                                }
+                                updateLoadingProgress(index + 1, totalEntries);
+                                uploadSequentially(index + 1);
+                            })
+                            .fail(function(error) {
+                                console.error(`Error uploading entry ${index + 1}:`, error);
+                                updateLoadingProgress(index + 1, totalEntries);
+                                uploadSequentially(index + 1);
+                            });
                     }
 
                     uploadSequentially(0);
