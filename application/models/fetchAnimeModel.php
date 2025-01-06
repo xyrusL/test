@@ -124,4 +124,13 @@ class FetchAnimeModel extends CI_Model {
             return false;
         }
     }
+
+    public function insertAnime($data) {
+        try {
+            return $this->db->insert('animeseries', $data);
+        } catch (Exception $e) {
+            log_message('error', 'Error inserting anime: ' . $e->getMessage());
+            return false;
+        }
+    }
 }

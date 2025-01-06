@@ -98,4 +98,33 @@ class Api extends CI_Controller {
             redirect(base_url());
         }
     }
+
+    public function uploadNewAnime() {
+        $jsonData = $this->input->post('animeData');
+        if (empty($jsonData)) {
+            echo json_encode(['success' => false, 'message' => 'No data received']);
+            return;
+        }
+
+        $data = json_decode($jsonData, true);
+        
+        // Format data for database
+        $insertData = [
+            'title' => $data['Title'],
+            'poster' => $data['Poster'],
+            'total_episodes' => $data['Total Episodes'],
+            'category' => $data['Category'],
+            'genres' => json_encode($data['Genres']),
+            'mal_score' => $data['MAL Score'],
+            'status' => $data['Status'],
+            'language' => $data['Language'],
+            'season' => $data['Season'],
+            'year' => $data['Year'],
+            'urls' => json_encode($data['urls']),
+            'date' => date('Y-m-d H:i:s')
+        ];
+
+        $result = $this->fetchAnimeModel->insertAnime($insertData);
+        echo json_encode(['success' => $result]);
+    }
 }

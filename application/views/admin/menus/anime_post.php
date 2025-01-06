@@ -232,6 +232,24 @@
     </div>
 </div>
 
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="spinner-border text-primary mb-2" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mb-2" id="loadingMessage">Uploading anime data...</p>
+                <div class="progress mb-2">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" id="uploadProgress" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <small class="text-muted" id="uploadDetails">Processed: 0 of 0</small>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function() {
         let animeDataStore = [];
@@ -401,7 +419,6 @@
             $('#searchModal').modal('show');
         }
 
-        // Handle JSON File Upload
         $('#uploadJsonBtn').click(function() {
             const requiredKeys = [
                 'Title', 'Poster', 'Total Episodes', 'Category',
@@ -421,27 +438,79 @@
                     if (!Array.isArray(jsonData)) {
                         jsonData = [jsonData];
                     }
+                    
                     for (let i = 0; i < jsonData.length; i++) {
                         const item = jsonData[i];
                         const missingKeys = requiredKeys.filter(key => !(key in item));
                         if (missingKeys.length > 0) {
                             showNotification('Error missing key(s) in JSON object #' + (i + 1) + ': ' + missingKeys.join(', '));
                             fileInput.value = '';
-                            console.error('Invalid JSON. Missing keys:', missingKeys);
                             return;
                         }
                     }
-                    console.log('Verified');
-                    showNotification('JSON uploaded successfully!');
+
+                    $('#uploadJsonModal').modal('hide');
+                    showLoading(`Uploading ${jsonData.length} anime entries...`);
+
+                    let completed = 0;
+                    const totalEntries = jsonData.length;
+                    
+                    function uploadSequentially(index) {
+                        if (index >= totalEntries) {
+                            hideLoading();
+                            showNotification(`Successfully uploaded ${completed} out of ${totalEntries} anime entries.`);
+                            initializePage();
+                            return;
+                        }
+
+                        $.ajax({
+                            url: '<?= base_url('api/uploadNewAnime') ?>',
+                            type: 'POST',
+                            data: { animeData: JSON.stringify(jsonData[index]) },
+                            dataType: 'json'
+                        })
+                        .done(function(response) {
+                            if (response.success) {
+                                completed++;
+                            }
+                            updateLoadingProgress(index + 1, totalEntries);
+                            uploadSequentially(index + 1);
+                        })
+                        .fail(function(error) {
+                            console.error(`Error uploading entry ${index + 1}:`, error);
+                            updateLoadingProgress(index + 1, totalEntries);
+                            uploadSequentially(index + 1);
+                        });
+                    }
+
+                    uploadSequentially(0);
+
                 } catch (error) {
+                    hideLoading();
                     console.error(error);
                     showNotification('Invalid JSON file. Please check the file content.');
                     fileInput.value = '';
                 }
             };
             reader.readAsText(file);
-            $('#uploadJsonModal').modal('hide');
         });
+
+        function showLoading(message = 'Uploading anime data...') {
+            $('#loadingMessage').text(message);
+            $('#uploadProgress').css('width', '0%').attr('aria-valuenow', 0);
+            $('#uploadDetails').text('Processed: 0 of 0');
+            $('#loadingModal').modal('show');
+        }
+
+        function updateLoadingProgress(current, total) {
+            const percentage = Math.round((current / total) * 100);
+            $('#uploadProgress').css('width', percentage + '%').attr('aria-valuenow', percentage);
+            $('#uploadDetails').text(`Processed: ${current} of ${total}`);
+        }
+
+        function hideLoading() {
+            $('#loadingModal').modal('hide');
+        }
 
         function showNotification(message) {
             $('#notificationMessage').text(message);
