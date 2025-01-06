@@ -122,6 +122,7 @@ class Api extends CI_Controller {
             'season' => $data['Season'],
             'year' => $data['Year'],
             'urls' => json_encode($data['urls']),
+            'published_date' => $data['Date Published'],
             'uploaded_date' => date('Y-m-d H:i:s')
         ];
 
