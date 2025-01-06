@@ -307,7 +307,7 @@
                 <td>${anime.id}</td>
                 <td>${anime.title}</td>
                 <td>${anime.status}</td>
-                <td>${anime.date}</td>
+                <td>${anime.uploaded_date}</td>
                 <td>
                     <button class="btn btn-sm btn-primary">Edit</button>
                     <button class="btn btn-sm btn-info" id="view-button">View</button>
@@ -338,7 +338,7 @@
                 $('#animeTitle').text(animeData.title);
                 $('#animeStatus').text(animeData.status);
 
-                const date = new Date(animeData.date);
+                const date = new Date(animeData.uploaded_date);
                 const options = {
                     year: 'numeric',
                     month: 'short',
@@ -372,7 +372,7 @@
 
                     $('#editTitle').val(animeData.title);
                     $('#editStatus').val(animeData.status);
-                    $('#editDate').val(animeData.date);
+                    $('#editDate').val(animeData.uploaded_date);
                     $('#editCategory').val(animeData.category);
                     $('#editGenres').val(JSON.parse(animeData.genres).join(', '));
                     $('#editLanguage').val(animeData.language);
@@ -425,7 +425,7 @@
             const requiredKeys = [
                 'Title', 'Poster', 'Total Episodes', 'Category',
                 'Genres', 'MAL Score', 'Status', 'Language', 'Season',
-                'Year', 'urls'
+                'Year', 'urls', 'Synopsis', 'Date Published'
             ];
             const fileInput = document.getElementById('jsonFileInput');
             if (!fileInput.files.length) {

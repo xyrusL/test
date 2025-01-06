@@ -87,7 +87,7 @@
 											src="<?php echo $anime->poster; ?>" 
 											loading="lazy"
 										/>
-										<div class="timetext"><?php echo $anime->date; ?></div>
+										<div class="timetext"><?php echo $anime->uploaded_date; ?></div>
 										<div class="rating"><i class="glyphicon glyphicon-star"></i> <?php echo $anime->mal_score; ?></div>
 									</div>
 									<div class="details">

@@ -113,6 +113,7 @@ class Api extends CI_Controller {
             'title' => $data['Title'],
             'poster' => $data['Poster'],
             'total_episodes' => $data['Total Episodes'],
+            'synopsis' => $data['Synopsis'],
             'category' => $data['Category'],
             'genres' => json_encode($data['Genres']),
             'mal_score' => $data['MAL Score'],
@@ -121,7 +122,7 @@ class Api extends CI_Controller {
             'season' => $data['Season'],
             'year' => $data['Year'],
             'urls' => json_encode($data['urls']),
-            'date' => date('Y-m-d H:i:s')
+            'uploaded_date' => date('Y-m-d H:i:s')
         ];
 
         $result = $this->fetchAnimeModel->insertAnime($insertData);
