@@ -7,6 +7,7 @@ class Home extends CI_Controller {
 	{
 		$this->load->model('fetchAnimeModel');
 		$data['animeSeries'] = $this->fetchAnimeModel->getAllAnime();
+        $data['animeFeatured'] = $this->fetchAnimeModel->getFeaturedAnime()[0];
 		$this->load->view('/home/homepage', $data);
 	}
 

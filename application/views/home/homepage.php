@@ -1,4 +1,5 @@
 <?php $this->load->view('home/template/header'); ?>
+
 <body>
 	<?php $this->load->view('home/template/navbar'); ?>
 	<div class="middle">
@@ -8,32 +9,45 @@
 					AniMixPlay PWA available<button id="pwaButton" class="btn btn-primary">Install PWA</button>
 				</div>
 				<div id="featuredcard">
-					<div id="featuredbgcont">
-						<img id="featuredbg" src="https://imgcdn.bunnycdn.to/poster/ninja-kamui.jpg" />
-					</div>
-					<div id="featuredcont">
-						<a href="/anime/281425"><img id="featuredimg" src="https://imgcdn.bunnycdn.to/poster/ninja-kamui.jpg" /></a>
-						<div id="featuredtitle"><a href="/anime/281425">Ninja Kamui</a></div>
-						<div id="featuredtext">Anime Details Here</div>
-						<div id="featuredgenre"><i class="glyphicon glyphicon-tag"></i> Action, Fantasy, Sci-Fi</div>
-						<a id="featuredNext" onclick="showFeatured(curFeatured + 1)"><i class="glyphicon glyphicon-chevron-right"></i></a>
-						<a id="featuredBack" onclick="showFeatured(curFeatured - 1)"><i class="glyphicon glyphicon-chevron-left"></i></a>
-					</div>
+					<?php if (!empty($animeFeatured)): ?>
+						<div id="featuredbgcont">
+							<img id="featuredbg" src="<?php echo $animeFeatured->poster; ?>" />
+						</div>
+						<div id="featuredcont">
+							<a href="<?php echo base_url('watch/' . url_title($animeFeatured->title, 'dash', TRUE)); ?>" data-id="<?php echo $animeFeatured->id; ?>" title="<?php echo $animeFeatured->title; ?>">
+								<img id="featuredimg" src="<?php echo $animeFeatured->poster; ?>" />
+							</a>
+							<div id="featuredtitle">
+								<a href="<?php echo base_url('watch/' . url_title($animeFeatured->title, 'dash', TRUE)); ?>" data-id="<?php echo $animeFeatured->id; ?>" title="<?php echo $animeFeatured->title; ?>"><?php echo $animeFeatured->title; ?></a>
+							</div>
+
+							<div id="featuredtext"><?php echo $animeFeatured->synopsis; ?></div>
+							<div id="featuredgenre">
+								<i class="glyphicon glyphicon-tag"></i> <?php echo str_replace(['[', ']', '"', ','], ['', '', '', ', '], $animeFeatured->genres); ?>
+							</div>
+							<a id="featuredNext" onclick="showFeatured(curFeatured + 1)">
+								<i class="glyphicon glyphicon-chevron-right"></i>
+							</a>
+							<a id="featuredBack" onclick="showFeatured(curFeatured - 1)">
+								<i class="glyphicon glyphicon-chevron-left"></i>
+							</a>
+						</div>
+					<?php endif; ?>
 				</div>
 				<div id="announcement">
 					<span style="color:#ff3d3d;">Note: We need money to maintain services, Ads are enabled temporarily!</span><br>
 					<a rel="noopener ugc nofollow noreferrer" href="https://twitter.com/Animixplay_" target="_blank"><img src="/assets/twitter.png"> Twitter </a> |
-					<a href="https://discord.gg/2jqb8XPV2C" rel="noopener ugc nofollow noreferrer" target="_blank"> <span class="customicon discordicon" style="margin: 0;margin-bottom: -4px;"></span> Discord </a> | 
+					<a href="https://discord.gg/2jqb8XPV2C" rel="noopener ugc nofollow noreferrer" target="_blank"> <span class="customicon discordicon" style="margin: 0;margin-bottom: -4px;"></span> Discord </a> |
 					<a href="https://medium.com/@Animixplay_" rel="noopener ugc nofollow noreferrer" target="_blank"> <img src="/assets/blog.png" style=" width: 16px; height: 16px; "> Blog | </a>
-					<span style="color:#c1ba93;">AniMixPlay.name</span> is our Current Site/Domain. <br> 
+					<span style="color:#c1ba93;">AniMixPlay.name</span> is our Current Site/Domain. <br>
 					Don't rely on google search! use bookmark instead.<br>
-					<br> 
-					If you got problem try <i class="glyphicon glyphicon-repeat"></i> reload the player several times, or just switch to external player.<br> 
+					<br>
+					If you got problem try <i class="glyphicon glyphicon-repeat"></i> reload the player several times, or just switch to external player.<br>
 					Also worth to try in incognito mode, disabling browser extension, or clearing cache.<br>
-					<br> 
-					For mobile users, you can swipe left / right to open menu, schedule, and stream list.<br> 
+					<br>
+					For mobile users, you can swipe left / right to open menu, schedule, and stream list.<br>
 					You can also install PWA (add to homescreen) to launch AniMixPlay like an app.<br>
-					<br> 
+					<br>
 					Read more info in our <a href="https://animixplay.to/info.html">info</a> page.<br>
 				</div>
 				<button type="button" id="readmorebtn" class="btn btn-secondary btn-sm btn-lg btn-block">
@@ -81,18 +95,17 @@
 							<li>
 								<a href="<?php echo base_url('watch/' . url_title($anime->title, 'dash', TRUE)); ?>" data-id="<?php echo $anime->id; ?>" title="<?php echo $anime->title; ?>">
 									<div class="searchimg">
-										<img 
-											alt="<?php echo $anime->title; ?> - Free Online" 
-											class="resultimg" 
-											src="<?php echo $anime->poster; ?>" 
-											loading="lazy"
-										/>
+										<img
+											alt="<?php echo $anime->title; ?> - Free Online"
+											class="resultimg"
+											src="<?php echo $anime->poster; ?>"
+											loading="lazy" />
 										<div class="timetext"><?php echo $anime->uploaded_date; ?></div>
 										<div class="rating"><i class="glyphicon glyphicon-star"></i> <?php echo $anime->mal_score; ?></div>
 									</div>
 									<div class="details">
 										<p class="name"><?php echo $anime->title; ?></p>
-										<p class="infotext">EP <?php echo $anime->total_episodes; ?><?php echo $anime->status === 'Finished Airing' ? '' : '/?'?></p>
+										<p class="infotext">EP <?php echo $anime->total_episodes; ?><?php echo $anime->status === 'Finished Airing' ? '' : '/?' ?></p>
 									</div>
 								</a>
 							</li>
@@ -103,7 +116,7 @@
 					</div>
 				</div>
 				<div id="bottommsgx">
-					
+
 				</div>
 				<div id="loadingtext">
 					<svg class="spinner" width="75px" height="75px" viewbox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
@@ -131,7 +144,7 @@
 				</div>
 				<div class="rightcard">
 					<div class="flexrightcard" id="seasonfilter">
-						
+
 						<div id="seasonleft">
 							<label for="seasonselect">Season:</label>
 							<select id="seasonselect">
@@ -155,21 +168,84 @@
 					<div class="flexrightcard" id="genreplace" style="visibility: visible;">
 						<?php
 						$genres = [
-							"Action", "Adult Cast", "Adventure", "Anthropomorphic", "Avant Garde", "Award Winning", "Cgdct", "Childcare", 
-							"Combat Sports", "Comedy", "Crossdressing", "Delinquents", "Detective", "Drama", "Ecchi", "Educational", 
-							"Erotica", "Fantasy", "Gag Humor", "Gore", "Gourmet", "Harem", "High Stakes Game", "Historical", "Horror", 
-							"Idols Female", "Idols Male", "Isekai", "Iyashikei", "Josei", "Kids", "Love Polygon", "Magical Sex Shift", 
-							"Mahou Shoujo", "Martial Arts", "Mecha", "Medical", "Military", "Music", "Mystery", "Mythology", 
-							"Organized Crime", "Otaku Culture", "Parody", "Performing Arts", "Pets", "Psychological", "Racing", 
-							"Reincarnation", "Reverse Harem", "Romance", "Romantic Subtext", "Samurai", "School", "Sci-Fi", "Shoujo", 
-							"Seinen", "Shounen", "Showbiz", "Slice Of Life", "Space", "Sports", "Strategy Game", "Super Power", 
-							"Supernatural", "Survival", "Suspense", "Team Sports", "Time Travel", "Vampire", "Video Game", "Visual Arts", 
+							"Action",
+							"Adult Cast",
+							"Adventure",
+							"Anthropomorphic",
+							"Avant Garde",
+							"Award Winning",
+							"Cgdct",
+							"Childcare",
+							"Combat Sports",
+							"Comedy",
+							"Crossdressing",
+							"Delinquents",
+							"Detective",
+							"Drama",
+							"Ecchi",
+							"Educational",
+							"Erotica",
+							"Fantasy",
+							"Gag Humor",
+							"Gore",
+							"Gourmet",
+							"Harem",
+							"High Stakes Game",
+							"Historical",
+							"Horror",
+							"Idols Female",
+							"Idols Male",
+							"Isekai",
+							"Iyashikei",
+							"Josei",
+							"Kids",
+							"Love Polygon",
+							"Magical Sex Shift",
+							"Mahou Shoujo",
+							"Martial Arts",
+							"Mecha",
+							"Medical",
+							"Military",
+							"Music",
+							"Mystery",
+							"Mythology",
+							"Organized Crime",
+							"Otaku Culture",
+							"Parody",
+							"Performing Arts",
+							"Pets",
+							"Psychological",
+							"Racing",
+							"Reincarnation",
+							"Reverse Harem",
+							"Romance",
+							"Romantic Subtext",
+							"Samurai",
+							"School",
+							"Sci-Fi",
+							"Shoujo",
+							"Seinen",
+							"Shounen",
+							"Showbiz",
+							"Slice Of Life",
+							"Space",
+							"Sports",
+							"Strategy Game",
+							"Super Power",
+							"Supernatural",
+							"Survival",
+							"Suspense",
+							"Team Sports",
+							"Time Travel",
+							"Vampire",
+							"Video Game",
+							"Visual Arts",
 							"Workplace"
 						];
 						echo '<div class="genresgrid form-check">';
 
 						foreach ($genres as $genre) {
-							$id = 'gen-' . str_replace(' ', '', $genre); 
+							$id = 'gen-' . str_replace(' ', '', $genre);
 							echo '<div>';
 							echo '<input class="form-check-input" type="checkbox" id="' . $id . '" value="' . $genre . '">';
 							echo '<label class="form-check-label" for="' . $id . '">' . $genre . '</label>';
@@ -255,4 +331,5 @@
 		</a>
 	</div>
 </body>
+
 </html>
