@@ -69,7 +69,7 @@
         <main class="flex-grow-1 p-4">
             <div class="container-fluid">
                 <!-- Main content goes here -->
-                <?= $this->load->view('admin/menus/anime_post', [], TRUE) ?>
+                <?= $this->load->view('admin/menus/featured_post', [], TRUE) ?>
             </div>
         </main>
     </div>

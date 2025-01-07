@@ -129,4 +129,41 @@ class Api extends CI_Controller {
         $result = $this->fetchAnimeModel->insertAnime($insertData);
         echo json_encode(['success' => $result]);
     }
+
+    public function saveFeaturedPosts() {
+        $animeIds = $this->input->post('anime_ids');
+        
+        if (!$animeIds) {
+            echo json_encode(['success' => false, 'message' => 'No anime IDs provided']);
+            return;
+        }
+
+        $featuredPosts = [];
+        foreach ($animeIds as $id) {
+            $animeData = $this->fetchAnimeModel->getAnimeById($id);
+            if ($animeData) {
+                $featuredPosts[] = [
+                    'id' => $animeData->id,
+                    'title' => $animeData->title,
+                    'poster' => $animeData->poster,
+                    'synopsis' => $animeData->synopsis,
+                    'total_episodes' => $animeData->total_episodes,
+                    'category' => $animeData->category,
+                    'genres' => $animeData->genres,
+                    'mal_score' => $animeData->mal_score,
+                    'status' => $animeData->status,
+                    'language' => $animeData->language,
+                    'season' => $animeData->season,
+                    'year' => $animeData->year,
+                    'urls' => $animeData->urls,
+                    'published_date' => $animeData->published_date,
+                    'uploaded_date' => $animeData->uploaded_date
+                ];
+            }
+        }
+
+        
+        $result = $this->fetchAnimeModel->insertFeaturedAnime($featuredPosts);
+        echo json_encode(['success' => $result]);
+    }
 }

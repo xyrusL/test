@@ -133,4 +133,14 @@ class FetchAnimeModel extends CI_Model {
             return false;
         }
     }
+
+    public function insertFeaturedAnime($data) 
+    {
+        try {
+            return $this->db->insert_batch('featuredpost', $data);
+        } catch (Exception $e) {
+            log_message('error', 'Error inserting featured anime: ' . $e->getMessage());
+            return false;
+        }
+    }
 }
