@@ -166,4 +166,9 @@ class Api extends CI_Controller {
         $result = $this->fetchAnimeModel->insertFeaturedAnime($featuredPosts);
         echo json_encode(['success' => $result]);
     }
+    
+    public function getFeaturedAnime() {
+        $data = $this->fetchAnimeModel->getFeaturedAnime();
+        echo json_encode($data);
+    }
 }

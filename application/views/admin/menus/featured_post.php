@@ -28,7 +28,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Featured post items will be added here -->
+                    <?php foreach ($featuredAnime as $index => $anime): ?>
+                        <tr>
+                            <td class="text-center"><?= $index + 1 ?></td>
+                            <td><?= $anime->id ?></td>
+                            <td><?= $anime->title ?></td>
+                            <td><?= $anime->language ?></td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td class="position-controls">
+                                <button class="btn btn-sm move-up" title="Move Up">
+                                    <i class="bi bi-chevron-double-up"></i>
+                                </button>
+                                <button class="btn btn-sm move-down" title="Move Down">
+                                    <i class="bi bi-chevron-double-down"></i>
+                                </button>
+                                <button class="btn btn-sm delete-btn" title="Delete">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
@@ -40,11 +60,50 @@
     </div>
 </div>
 
+<!-- Add this modal markup at the end of your file -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Action</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmButton">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="alertModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="alertTitle">Notice</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="alertMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function() {
         const $searchInput = $('#searchAnime');
         const $searchResults = $('#searchResults');
         let searchTimeout;
+
+        const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+        const alertModal = new bootstrap.Modal(document.getElementById('alertModal'));
 
         // Handle search input
         $searchInput.on('input', function() {
@@ -105,15 +164,15 @@
             const $resultItem = $(this).closest('.result-item');
             const animeId = $resultItem.data('id');
             const animeTitle = $resultItem.find('.result-title').text();
-            
+
             $.ajax({
                 url: '<?= base_url() ?>/api/getAnimeById',
                 method: 'POST',
-                data: { id: animeId },
+                data: {
+                    id: animeId
+                },
                 success: function(response) {
                     let data = JSON.parse(response);
-                    
-                    // Add new row to table
                     const rowPosition = $('.table-custom tbody tr').length + 1;
                     $('.table-custom tbody').append(`
                         <tr>
@@ -136,14 +195,14 @@
                             </td>
                         </tr>
                     `);
-                    
+
                     // Clear search and hide results
                     $searchInput.val('');
                     $searchResults.fadeOut(200);
                 },
                 error: function(xhr, status, error) {
                     console.error('Error adding anime:', error);
-                    alert('Failed to add anime to featured list');
+                    showAlert('Error', 'Failed to add anime to featured list', true);
                 }
             });
         });
@@ -152,17 +211,17 @@
         $(document).on('click', '.move-up', function() {
             const currentRow = $(this).closest('tr');
             const prevRow = currentRow.prev();
-            
+
             if (prevRow.length) {
                 // Animate the swap
                 currentRow.css('backgroundColor', 'rgba(255,255,255,0.1)');
                 prevRow.css('backgroundColor', 'rgba(255,255,255,0.1)');
-                
+
                 currentRow.fadeOut(200, function() {
                     prevRow.before(currentRow);
                     currentRow.fadeIn(200);
                     updatePositions();
-                    
+
                     // Reset background
                     setTimeout(() => {
                         currentRow.css('backgroundColor', '');
@@ -175,17 +234,17 @@
         $(document).on('click', '.move-down', function() {
             const currentRow = $(this).closest('tr');
             const nextRow = currentRow.next();
-            
+
             if (nextRow.length) {
                 // Animate the swap
                 currentRow.css('backgroundColor', 'rgba(255,255,255,0.1)');
                 nextRow.css('backgroundColor', 'rgba(255,255,255,0.1)');
-                
+
                 currentRow.fadeOut(200, function() {
                     nextRow.after(currentRow);
                     currentRow.fadeIn(200);
                     updatePositions();
-                    
+
                     // Reset background
                     setTimeout(() => {
                         currentRow.css('backgroundColor', '');
@@ -195,64 +254,36 @@
             }
         });
 
-        // Add delete handler after other handlers
+        // Simplified delete handler - no API call needed
         $(document).on('click', '.delete-btn', function() {
             const currentRow = $(this).closest('tr');
-            const animeId = currentRow.find('td:eq(1)').text();
+            const animeTitle = currentRow.find('td:eq(2)').text(); // Get anime title
             
-            if (confirm('Are you sure you want to remove this anime from featured list?')) {
-                $.ajax({
-                    url: '<?= base_url() ?>/api/removeFeatured',
-                    method: 'POST',
-                    data: { id: animeId },
-                    success: function(response) {
-                        currentRow.fadeOut(300, function() {
-                            $(this).remove();
-                            updatePositions();
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error removing anime:', error);
-                        alert('Failed to remove anime from featured list');
-                    }
+            $('#modalMessage').text(`Are you sure you want to remove "${animeTitle}" from featured list?`);
+            $('#confirmButton').off('click').on('click', function() {
+                currentRow.fadeOut(300, function() {
+                    $(this).remove();
+                    updatePositions();
                 });
-            }
+                confirmModal.hide();
+            });
+            confirmModal.show();
         });
 
+        // Function to update positions (simplified, no API call)
         function updatePositions() {
-            // Update visible position numbers
+            // Only update visible position numbers
             $('.table-custom tbody tr').each(function(index) {
                 $(this).find('td:first').text(index + 1);
             });
-
-            // Get all anime IDs and their new positions
-            const positions = $('.table-custom tbody tr').map(function(index) {
-                return {
-                    id: $(this).find('td:eq(1)').text(), // Changed to second column for ID
-                    position: index + 1
-                };
-            }).get();
-
-            // Send updated positions to server
-            $.ajax({
-                url: '<?= base_url() ?>/api/updatePositions',
-                method: 'POST',
-                data: { positions: positions },
-                success: function(response) {
-                    console.log('Positions updated successfully');
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error updating positions:', error);
-                }
-            });
         }
 
-        // Add save handler
+        // Handle save button click
         $('.save-featured').on('click', function() {
             const button = $(this);
             button.prop('disabled', true).html('<i class="bi bi-hourglass-split me-2"></i>Saving...');
 
-            // Get all anime IDs from the table
+            // Get all anime IDs in their current order
             const animeIds = $('.table-custom tbody tr').map(function() {
                 return $(this).find('td:eq(1)').text();
             }).get();
@@ -285,5 +316,17 @@
                 }
             });
         });
+
+        // Replace error alerts in AJAX calls
+        function showAlert(title, message, isError = false) {
+            $('#alertTitle').text(title);
+            $('#alertMessage').text(message);
+            if (isError) {
+                $('#alertTitle').addClass('text-danger');
+            } else {
+                $('#alertTitle').removeClass('text-danger');
+            }
+            alertModal.show();
+        }
     });
 </script>
