@@ -28,27 +28,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($featuredAnime as $index => $anime): ?>
-                        <tr>
-                            <td class="text-center"><?= $index + 1 ?></td>
-                            <td><?= $anime->id ?></td>
-                            <td><?= $anime->title ?></td>
-                            <td><?= $anime->language ?></td>
-                            <td>Null</td>
-                            <td>Null</td>
-                            <td class="position-controls">
-                                <button class="btn btn-sm move-up" title="Move Up">
-                                    <i class="bi bi-chevron-double-up"></i>
-                                </button>
-                                <button class="btn btn-sm move-down" title="Move Down">
-                                    <i class="bi bi-chevron-double-down"></i>
-                                </button>
-                                <button class="btn btn-sm delete-btn" title="Delete">
-                                    <i class="bi bi-trash3"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
+                   <!-- table rows will be added dynamically -->
                 </tbody>
             </table>
         </div>
@@ -157,6 +137,41 @@
             $searchInput.val($(this).find('.result-title').text());
             $searchResults.fadeOut(200);
         });
+
+        // Load featured anime on page load
+        $.ajax({
+            url: '<?= base_url() ?>/api/getFeaturedAnime',
+            method: 'GET',
+            success: function(response) {
+                let data = JSON.parse(response);
+                if (data.length > 0) {
+                    data.forEach((item, index) => {
+                        const rowPosition = index + 1;
+                        $('.table-custom tbody').append(`
+                            <tr>
+                                <td class="text-center">${rowPosition}</td>
+                                <td>${item.id}</td>
+                                <td>${item.title}</td>
+                                <td>${item.status}</td>
+                                <td>${item.clicked}</td>
+                                <td>${item.views}</td>
+                                <td class="position-controls">
+                                    <button class="btn btn-sm move-up" title="Move Up">
+                                        <i class="bi bi-chevron-double-up"></i>
+                                    </button>
+                                    <button class="btn btn-sm move-down" title="Move Down">
+                                        <i class="bi bi-chevron-double-down"></i>
+                                    </button>
+                                    <button class="btn btn-sm delete-btn" title="Delete">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                }
+            }
+        })
 
         // Handle add button click
         $(document).on('click', '.add-button', function(e) {

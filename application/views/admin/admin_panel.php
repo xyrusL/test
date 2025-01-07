@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!--CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<?= base_url('assets/css/admin_panel.css') ?>">  
+    <link rel="stylesheet" href="<?= base_url('assets/css/admin_panel.css') ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-   
+
     <!--JS -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= base_url('assets/js/admin.js') ?>"></script>
 </head>
+
 <body class="bg-white">
     <div class="d-flex">
         <nav class="sidebar p-4">
@@ -37,7 +40,8 @@
                                 <a class="nav-link" href="#">Featured Post</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Anime Post</a>
+                                <a class="nav-link" href="">Anime Post</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -67,11 +71,48 @@
             </ul>
         </nav>
         <main class="flex-grow-1 p-4">
-            <div class="container-fluid">
+            <div class="container-fluid" id="mainContent">
                 <!-- Main content goes here -->
-                <?= $this->load->view('admin/menus/featured_post', [], TRUE) ?>
+                <?= $this->load->view('admin/menus/featured_post', [], TRUE); ?>
             </div>
         </main>
     </div>
 </body>
+<script>
+    $(document).ready(function() {
+        // Event listener for all navigation links
+        $('.nav-link').click(function(e) {
+            const menuText = $(this).text().trim();
+
+            // Map menu text to page identifiers
+            const pageMap = {
+                'Anime Post': 'anime_post',
+                'Featured Post': 'featured_post'
+                // Add new pages here easily
+            };
+
+            if (pageMap[menuText]) {
+                e.preventDefault();
+
+                // Show loading indicator
+                $('#mainContent').html('<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+
+                // Fetch content using generic endpoint
+                $.ajax({
+                    url: '<?= base_url() ?>' + 'admin/load_page/' + pageMap[menuText],
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function(response) {
+                        $('#mainContent').html(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading content:', error);
+                        $('#mainContent').html('<div class="alert alert-danger">Error loading content. Please try again later.</div>');
+                    }
+                });
+            }
+        });
+    });
+</script>
+
 </html>
