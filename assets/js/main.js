@@ -1,3 +1,5 @@
+const baseUrl = window.location.origin + '/test/';
+console.log('Base URL:', baseUrl);
 const ANIME_TYPES = {
     ALL: 'all',
     DUB: 'dub',
@@ -16,7 +18,7 @@ let currentType = ANIME_TYPES.ALL;
 function expandGenre() {
     const $genreplace = $('#genreplace');
     const $expandBtn = $('#expandbtn i');
-    
+
     const isExpanded = $genreplace.height() === 872;
     $genreplace.css('height', isExpanded ? '205px' : '872px');
     $expandBtn.toggleClass('glyphicon-menu-up glyphicon-menu-down');
@@ -25,22 +27,15 @@ function expandGenre() {
 function expandAnnouncement() {
     const $announcement = $('#announcement');
     const $expandBtn = $('#readmorebtn i');
-    
+
     const isExpanded = $announcement.height() > 100;
     $announcement.animate({ height: isExpanded ? '48px' : '214px' });
     $expandBtn.toggleClass('glyphicon-menu-up glyphicon-menu-down');
 }
 
 function appendLayout(anime) {
-    const cleanTitle = anime.title.replace(/[♥♡☆→()]/g, '');
-    const formattedTitle = cleanTitle.toLowerCase()
-        .replace(/[:+!?. ]/g, '-')
-        .replace(/-+/g, '-')
-        .trim()
-        .replace(/^-+|-+$/g, '');
-
+    const formattedTitle = cleanTitle(anime.title);
     const watchUrl = baseUrl + 'watch/' + formattedTitle;
-
     const template = `
         <li>
             <a href="${watchUrl}" data-id="${anime.id}" title="${anime.title}">
@@ -67,7 +62,7 @@ function appendLayout(anime) {
 function showFollowed() {
     $('.searchresult, #bottommsg').empty();
     $('#loadingtext').show();
-    
+
     const followedByUser = localStorage.getItem('followedByUser');
 
     if (!followedByUser || JSON.parse(followedByUser).length === 0) {
@@ -84,7 +79,7 @@ function showFollowed() {
             url: `${baseUrl}/api/getAnimeById`,
             type: 'POST',
             data: { id },
-            success: function(response) {
+            success: function (response) {
                 try {
                     const data = JSON.parse(response);
                     if (data) {
@@ -94,10 +89,10 @@ function showFollowed() {
                     console.error('Error parsing response:', error);
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('AJAX Error:', error);
             },
-            complete: function() {
+            complete: function () {
                 loadedCount++;
                 if (loadedCount === followedIds.length) {
                     $('#loadingtext').hide();
@@ -108,20 +103,20 @@ function showFollowed() {
 }
 
 function fetchingAnimeData(type) {
-    currentType = type === 'getAllAnime' ? ANIME_TYPES.ALL : 
-                  type === 'getDubAnime' ? ANIME_TYPES.DUB : 
-                  type === 'getSubAnime' ? ANIME_TYPES.SUB : ANIME_TYPES.MOVIE;
-                 
+    currentType = type === 'getAllAnime' ? ANIME_TYPES.ALL :
+        type === 'getDubAnime' ? ANIME_TYPES.DUB :
+            type === 'getSubAnime' ? ANIME_TYPES.SUB : ANIME_TYPES.MOVIE;
+
     $('.searchresult, #bottommsg').empty();
     $('#loadingtext').show();
 
     $.ajax({
         url: `${baseUrl}/api/${type}`,
         type: 'POST',
-        success: function(response) {
+        success: function (response) {
             try {
                 const data = JSON.parse(response);
-                if (data?.length) { 
+                if (data?.length) {
                     $('#loadingtext').hide();
                     data.forEach(appendLayout);
                     $('#bottommsg').append(`
@@ -134,7 +129,7 @@ function fetchingAnimeData(type) {
                 $('#bottommsg').append('<div class="error-message">Error loading data</div>');
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error('Ajax error:', error);
             $('#loadingtext').hide();
             $('#bottommsg').append('<div class="error-message">Error loading data</div>');
@@ -146,17 +141,17 @@ function loadPagination() {
     const $loadMoreBtn = $('#loadmorelist');
     const originalText = $loadMoreBtn.html();
     $loadMoreBtn.html('<i class="glyphicon glyphicon-refresh glyphicon-spin"></i> Load More...');
-    
+
     $.ajax({
         url: `${baseUrl}/home/loadMore`,
         type: 'POST',
         data: { offSet, currentType },
-        success: function(response) {
+        success: function (response) {
             try {
                 const data = JSON.parse(response);
                 if (data?.length) {
                     data.forEach(appendLayout);
-                    offSet += CONFIG.itemsPerLoad; 
+                    offSet += CONFIG.itemsPerLoad;
                     $loadMoreBtn.html(originalText);
                 } else {
                     $loadMoreBtn.html('No More Posts');
@@ -166,7 +161,7 @@ function loadPagination() {
                 $loadMoreBtn.html('Error loading more posts');
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error('Ajax error:', error);
             $loadMoreBtn.html(originalText);
         }
@@ -181,13 +176,13 @@ function cleanTitle(title) {
         .replace(/^-+|-+$/g, '');
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('q');
 
     if (searchInput) {
-        searchInput.addEventListener('input', function() {
+        searchInput.addEventListener('input', function () {
             const searchQuery = this.value.trim();
-            
+
             if (searchQuery.length === 0) {
                 $('.quicksearchcontainer').hide();
                 $('.quickresult').empty();
@@ -195,13 +190,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             $('.quicksearchcontainer').show();
-            
+
             if (searchQuery.length >= 2) {
                 $.ajax({
                     url: `${baseUrl}api/searchAnime`,
                     type: 'POST',
                     data: { query: searchQuery },
-                    success: function(response) {
+                    success: function (response) {
                         $('.quickresult').empty();
                         try {
                             const data = JSON.parse(response);
@@ -230,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             $('.quickresult').append('<li>Error loading results</li>');
                         }
                     },
-                    error: function() {
+                    error: function () {
                         $('.quickresult').empty().append('<li>Error loading results</li>');
                     }
                 });
@@ -238,20 +233,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 $('.quickresult').empty();
             }
         });
-        
-        document.addEventListener('click', function(e) {
+
+        document.addEventListener('click', function (e) {
             if (!e.target.closest('.quicksearchcontainer') && !e.target.closest('#searchbox')) {
                 $('.quicksearchcontainer').hide();
             }
         });
     }
 
-    $(document).on('click', '.topmenubtn', function(e) {
+    $(document).on('click', '.topmenubtn', function (e) {
         e.preventDefault();
         $.ajax({
             url: `${baseUrl}api/getRandomAnime`,
             type: 'GET',
-            success: function(response) {
+            success: function (response) {
                 try {
                     const anime = JSON.parse(response);
                     if (anime && anime.title) {
@@ -265,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.error('Error parsing random anime data:', error);
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('Error fetching random anime:', error);
             }
         });
@@ -280,3 +275,86 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#expandbtn').click(expandGenre);
     $('#readmorebtn').click(expandAnnouncement);
 });
+
+/*
+ * This script manages the featured anime section.
+ */
+
+function generateFeaturedLayout(anime) {
+    const formattedTitle = cleanTitle(anime.title);
+    const watchUrl = baseUrl + 'watch/' + formattedTitle;
+
+    let html = `<div id="featuredbgcont">
+                <img id="featuredbg" src="${anime.poster}" />
+            </div>
+            <div id="featuredcont">
+                <a href="${watchUrl}" data-id="${anime.id}" title="${anime.title}">
+                    <img id="featuredimg" src="${anime.poster}" />
+                </a>
+                <div id="featuredtitle">
+                    <a href="${watchUrl}" data-id="${anime.id}" title="${anime.title}">${anime.title}</a>
+                </div>
+                <div id="featuredtext">${anime.synopsis}</div>
+                <div id="featuredgenre">
+                    <i class="glyphicon glyphicon-tag"></i> ${anime.genres.replace(/[\[\]"]/g, '').replace(/,/g, ', ')}
+                </div>
+                <a id="featuredNext">
+                    <i class="glyphicon glyphicon-chevron-right"></i>
+                </a>
+                <a id="featuredBack">
+                    <i class="glyphicon glyphicon-chevron-left"></i>
+                </a>
+            </div>`;
+    return html;
+}
+
+let index = 0;
+let time = 4000;
+
+$(document).on('click', '#featuredNext', () => {
+    featuredPagination('next');
+});
+
+$(document).on('click', '#featuredBack', () => {
+    featuredPagination('prev');
+});
+
+function autoPlayFeatured() {
+    setInterval(() => {
+        featuredPagination('next');
+    }, time);
+}
+
+function featuredPagination(btn) {
+    $.ajax({
+        url: `${baseUrl}/api/getFeaturedAnime`,
+        type: 'GET',
+        success: function (response) {
+            try {
+                let posts = JSON.parse(response);
+                let postLength = posts.length;
+
+                if (btn === 'next') {
+                    index = (index + 1) % postLength;
+                } else {
+                    index = (index - 1 + postLength) % postLength;
+                }
+
+                // Reset time to 0 when user click next or prev
+                time = 0;
+
+                $('#featuredcard').empty();
+                $('#featuredcard').append(generateFeaturedLayout(posts[index]));
+
+                // Set time back to 4s 
+                time = 4000;
+
+            } catch (error) {
+                console.error('Error parsing featured anime:', error);
+            }
+        },
+    });
+}
+
+// Auto play featured anime
+autoPlayFeatured();

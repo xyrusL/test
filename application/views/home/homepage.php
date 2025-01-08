@@ -25,10 +25,10 @@
 							<div id="featuredgenre">
 								<i class="glyphicon glyphicon-tag"></i> <?php echo str_replace(['[', ']', '"', ','], ['', '', '', ', '], $animeFeatured->genres); ?>
 							</div>
-							<a id="featuredNext" onclick="showFeatured(curFeatured + 1)">
+							<a id="featuredNext">
 								<i class="glyphicon glyphicon-chevron-right"></i>
 							</a>
-							<a id="featuredBack" onclick="showFeatured(curFeatured - 1)">
+							<a id="featuredBack">
 								<i class="glyphicon glyphicon-chevron-left"></i>
 							</a>
 						</div>
@@ -331,5 +331,4 @@
 		</a>
 	</div>
 </body>
-
 </html>
